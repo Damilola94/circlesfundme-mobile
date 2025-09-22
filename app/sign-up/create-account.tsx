@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   Keyboard,
+  Linking,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -36,9 +37,9 @@ export default function CreateAccount() {
     return regex.test(value);
   };
   const validateEmail = (value: string) => {
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return regex.test(value);
-};
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(value);
+  };
 
 
   const handlePasswordChange = (value: string) => {
@@ -89,44 +90,44 @@ export default function CreateAccount() {
   });
 
   const handleSubmit = () => {
-  if (!email || !password || !confirmPassword) {
-    Toast.show({
-      type: "error",
-      text1: "All fields are required",
-    });
-    return;
-  }
+    if (!email || !password || !confirmPassword) {
+      Toast.show({
+        type: "error",
+        text1: "All fields are required",
+      });
+      return;
+    }
 
-  if (!validateEmail(email)) {
-    Toast.show({
-      type: "error",
-      text1: "Invalid email address",
-      text2: "Please enter a valid email format (e.g. example@mail.com)",
-    });
-    return;
-  }
+    if (!validateEmail(email)) {
+      Toast.show({
+        type: "error",
+        text1: "Invalid email address",
+        text2: "Please enter a valid email format (e.g. example@mail.com)",
+      });
+      return;
+    }
 
-  if (isPasswordInvalid) {
-    Toast.show({
-      type: "error",
-      text1: "Invalid password format",
-      text2:
-        "Password must include uppercase, lowercase, number and special character.",
-    });
-    return;
-  }
+    if (isPasswordInvalid) {
+      Toast.show({
+        type: "error",
+        text1: "Invalid password format",
+        text2:
+          "Password must include uppercase, lowercase, number and special character.",
+      });
+      return;
+    }
 
-  if (password !== confirmPassword) {
-    Toast.show({
-      type: "error",
-      text1: "Passwords do not match",
-    });
-    return;
-  }
+    if (password !== confirmPassword) {
+      Toast.show({
+        type: "error",
+        text1: "Passwords do not match",
+      });
+      return;
+    }
 
-  const body = { email, password };
-  createAccountMutation.mutate(body);
-};
+    const body = { email, password };
+    createAccountMutation.mutate(body);
+  };
 
 
   return (
@@ -193,7 +194,11 @@ export default function CreateAccount() {
             <Text style={styles.termsText}>
               By creating an account, you agree to our{" "}
             </Text>
-            <TouchableOpacity onPress={() => router.push("/+not-found")}>
+            <TouchableOpacity
+              onPress={() =>
+                Linking.openURL("https://www.circlesfundme.com/terms-and-condition")
+              }
+            >
               <Text style={styles.footerLink}>
                 Terms & Conditions and Cooperative Agreement
               </Text>
