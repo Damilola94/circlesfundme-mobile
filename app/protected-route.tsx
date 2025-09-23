@@ -18,39 +18,37 @@ export default function ProtectedRoute({ children }: Props) {
         const rawData = await AsyncStorage.getItem("data");
         const seenOnboarding = await AsyncStorage.getItem("seenOnboarding");
         const parsedData = rawData ? JSON.parse(rawData) : null;
-console.log(seenOnboarding, "seenOnboarding - protected route");
 
         const now = Date.now();
         const FIFTEEN_MIN = 15 * 60 * 1000;
 
         if (parsedData?.accessToken) {
-          // ✅ Expired session
-          if (now - (parsedData.loginTime || 0) > FIFTEEN_MIN) {
+          if (parsedData.loginTime && now - parsedData.loginTime > FIFTEEN_MIN) {
             await AsyncStorage.removeItem("data");
             router.replace("/sign-in/login");
             return;
           }
 
-          // ✅ Redirect based on KYC status
-          if (parsedData.isKycComplete) {
-            // let user access protected children
-          } else {
+          console.log(parsedData?.accessToken, parsedData.loginTime, parsedData.isKycComplete);
+          
+          if (!parsedData.isKycComplete) {
             router.replace("/sign-up/personal-info");
             return;
           }
-        } else if (seenOnboarding === "user-onboarded-success") {
-          // ✅ User finished onboarding but no session
-          router.replace("/sign-in/login");
-          return;
-        } else {
-          // ✅ New user
-          router.replace("/sign-up/onboarding");
+
+          // router.replace("/(tabs)/dashboard");
           return;
         }
+
+        if (seenOnboarding === "user-onboarded-success") {
+          router.replace("/sign-in/login");
+          return;
+        }
+
+        router.replace("/sign-up/onboarding");
       } catch (err) {
         console.error("Auth check error:", err);
         router.replace("/sign-up/onboarding");
-        return;
       } finally {
         setLoading(false);
       }
@@ -63,6 +61,5 @@ console.log(seenOnboarding, "seenOnboarding - protected route");
     return <Loader message="Loading..." />;
   }
 
-  // ✅ Only render children if user is logged in & KYC complete
   return <View style={{ flex: 1 }}>{children}</View>;
 }

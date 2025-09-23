@@ -1,4 +1,3 @@
- 
 import Loader from "@/components/ui/Loader";
 import { Colors } from "@/constants/Colors";
 import handleFetch from "@/services/api/handleFetch";
@@ -43,13 +42,21 @@ export default function Login() {
         });
         return;
       }
+
       Toast.show({
         type: "success",
         text1: "Login Successful",
       });
+
       if (res?.data?.accessToken) {
-        await AsyncStorage.setItem("data", JSON.stringify(res?.data));
+        const payload = {
+          ...res.data,
+          loginTime: Date.now(),
+          isKycComplete: true,
+        };
+        await AsyncStorage.setItem("data", JSON.stringify(payload));
       }
+
       router.replace("/(tabs)/dashboard");
     },
     onError: (error: any) => {
@@ -102,11 +109,10 @@ export default function Login() {
           />
 
           <TouchableOpacity
-            onPress={() => router.push("/auth/forgot-password")
-            }
+            onPress={() => router.push("/auth/forgot-password")}
             style={{ alignSelf: "flex-end" }}
           >
-            <Text style={[styles.forgotText]}>Forgotten Password?</Text>
+            <Text style={styles.forgotText}>Forgotten Password?</Text>
           </TouchableOpacity>
 
           <View style={{ marginVertical: resHeight(3) }} />
