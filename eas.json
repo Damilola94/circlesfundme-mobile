@@ -16,6 +16,12 @@
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "demilademichael18@gmail.com",
+        "ascAppId": "6752893435",
+        "appleTeamId":"UP4SUY6BJD"
+      }
+    }
   }
 }
