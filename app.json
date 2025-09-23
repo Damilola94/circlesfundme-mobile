@@ -17,8 +17,10 @@
       "supportsTablet": true,
       "backgroundColor": "#00A86B",
       "infoPlist": {
-        "NSCameraUsageDescription": "Allow camera access for taking pictures."
-      }
+        "NSCameraUsageDescription": "Allow camera access for taking pictures.",
+        "ITSAppUsesNonExemptEncryption": false
+      },
+      "bundleIdentifier": "com.circlesfundme"
     },
     "android": {
       "package": "com.circlesfundme",
