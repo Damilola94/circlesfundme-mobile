@@ -64,7 +64,7 @@ const SelectInput: React.FC<SelectInputProps> = ({
           <View
             style={[
               styles.modalContent,
-              fixedHeight ? { height: "60%" } : filteredOptions.length <= 4 && { minHeight: "20%" },
+              fixedHeight ? { height: "60%" } : filteredOptions.length <= 5 && { minHeight: "20%" },
             ]}
           >
             {hasSearch && (

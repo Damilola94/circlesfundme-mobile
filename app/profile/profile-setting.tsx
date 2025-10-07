@@ -80,7 +80,6 @@ export default function ProfileSetting() {
   const [contribution, setContribution] = useState("");
   const [pSetting, setPSetting] = useState<"pSetting" | null>(null);
   const { image, pickImage, clearImage } = useImagePicker();
-  const [error, setError] = useState("");
 
   useEffect(() => {
     if (userData?.data) {
@@ -111,7 +110,7 @@ export default function ProfileSetting() {
       setCostOfVehicle(autoLoanDetail?.costOfVehicle || 0);
       setScheme(contributionScheme?.name || "");
       setContribution(contributionAmount ? String(contributionAmount) : "");
-      setIncome(incomeAmount ? String(incomeAmount) : "");
+      setIncome(incomeAmount ? String(incomeAmount) : String(autoLoanDetail?.costOfVehicle));
     }
   }, [userData]);
 
@@ -248,27 +247,16 @@ export default function ProfileSetting() {
       item.name.toLowerCase().includes(scheme.toLowerCase())
   )?.id;
 
-  const maxPercentage = scheme === "Weekly Contribution Scheme" ? 0.2 : 0.3;
 
-  const incomeValue = parseFloat(income.replace(/,/g, ""));
-  const contributionValue = parseFloat(contribution.replace(/,/g, ""));
-
-  const isValidContribution = contributionValue <= maxPercentage * incomeValue;
-  const isAssetFinance = scheme === "Auto Financing";
+  const isAssetFinance = scheme === "Auto Financing" || "Tricycle Financing";
 
   const handleSubmit = () => {
     if (!userData?.data) return;
 
-    if (!isValidContribution) {
-      const maxPercent =
-        scheme === "Weekly Contribution Scheme" ? "20%" : "30%";
-      setError(`You cannot contribute more than ${maxPercent} of your income.`);
-      return;
-    }
-
     const [firstName, ...lastNameParts] = fullName.trim().split(" ");
     const lastName = lastNameParts.join(" ");
     const selectedGender = gender === "Not Specified" ? "NotSet" : gender;
+console.log(income);
 
     const payload = {
       firstName,
@@ -480,8 +468,6 @@ export default function ProfileSetting() {
             />
           </View>
         )}
-
-        {error ? <Text style={styles.error}>{error}</Text> : null}
         <View style={{ marginBottom: resHeight(5) }} />
         <Button title="Continue" disabled={updateUserMutation.isPending} onPress={handleSubmit} />
         <View style={{ marginBottom: resHeight(10) }} />
