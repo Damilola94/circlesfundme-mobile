@@ -30,7 +30,7 @@ export default function CreateAccount() {
 
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
-  const [debounceTimeout, setDebounceTimeout] = useState<number | null>(null);
+  const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const validatePassword = (value: string) => {
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;

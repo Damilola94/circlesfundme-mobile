@@ -402,13 +402,13 @@ console.log(income);
               keyboardType="phone-pad"
             />
             <Input
-              label={`Total Monthly Contribution`}
+              label={`Your 10% Equity Contribution`}
               value={formatAmount(preLoanContributionAmount)}
               editable={false}
               valueType="money"
               showInfoIcon={true}
-              infoTitle="Total Weekly Contribution"
-              infoContent={`Your monthly contribution plus the pre-loan service charge.`}
+              infoTitle="Your 10% Equity Contribution"
+              infoContent={`Your daily/weekly/monthly contribution plus the pre-loan service charge.`}
             />
             <Input
               label="Post-Loan Weekly Repayment over 4 years"

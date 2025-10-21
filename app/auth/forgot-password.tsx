@@ -10,6 +10,7 @@ import {
   Keyboard,
   StyleSheet,
   Text,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
@@ -89,6 +90,12 @@ export default function ForgetPassword() {
             placeholder="Enter your email or phone number"
             onChangeText={setEmailOrPhone}
           />
+           <View style={styles.groupText}>
+            <Text style={styles.footerText}>Remember your Password? </Text>
+            <TouchableOpacity onPress={() => router.replace("/sign-in/login")}>
+              <Text style={styles.footerLink}>Sign In</Text>
+            </TouchableOpacity>
+          </View>
 
           <View style={{ marginVertical: resHeight(3) }} />
 
@@ -119,5 +126,21 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontFamily: "OutfitRegular",
     marginBottom: resHeight(4),
+  },
+  footerText: {
+    textAlign: "center",
+    fontSize: resFont(12),
+    color: Colors.dark.background,
+    fontFamily: "OutfitMedium",
+  },
+  footerLink: {
+    color: Colors.dark.primary,
+    fontWeight: "500",
+    fontFamily: "OutfitMedium",
+  },
+  groupText: {
+    flexDirection: "row",
+    marginTop: resHeight(4),
+    justifyContent: "center",
   },
 });
