@@ -78,6 +78,7 @@ export default function ContributionScheme() {
   const [contribution, setContribution] = useState("");
   const [assetCost, setAssetCost] = useState("");
   const [error, setError] = useState("");
+  const [breakdownError, setBreakdownError] = useState<string | null>(null);
   const [additionalWeeklyContribution, setAdditionalWeeklyContribution] =
     useState("");
   const [isAdditionalContributionInvalid, setIsAdditionalContributionInvalid] =
@@ -92,6 +93,7 @@ export default function ContributionScheme() {
     if (!contribution) return 0;
     return Number.parseFloat(contribution.replace(/,/g, "")) || 0;
   }, [contribution]);
+  console.log(typeof contributionValue, "contributionValue");
 
   const [vehicleBreakdown, setVehicleBreakdown] = useState({
     costOfVehicle: "",
@@ -188,8 +190,10 @@ export default function ContributionScheme() {
             breakdown.postLoanWeeklyContribution || "",
         });
       }
+      setBreakdownError(null);
     },
     onError: (error: any) => {
+      setBreakdownError(error?.message || "Something went wrong");
       Toast.show({
         type: "error",
         text1: "Breakdown Error",
@@ -350,10 +354,13 @@ export default function ContributionScheme() {
       setError("Please select a contribution scheme.");
       return;
     }
-
     if (isAssetFinance) {
       if (!assetCost) {
         setError("Please enter the cost of the vehicle.");
+        return;
+      }
+      if (breakdownError) {
+        setError("Cost of the vehicle must be at least N7,000,000");
         return;
       }
       if (!remittanceType) {
@@ -377,6 +384,10 @@ export default function ContributionScheme() {
         setError("Please enter the cost of the vehicle.");
         return;
       }
+      if (breakdownError) {
+        setError("Cost of the vehicle must be at least N3,500,000");
+        return;
+      }
       if (!debouncedAdditionalContribution.trim()) {
         setError("Please enter your contribution toward the 10% equity.");
         return;
@@ -398,6 +409,10 @@ export default function ContributionScheme() {
         setError("Please fill in your income and preferred contribution.");
         return;
       }
+      if (contributionValue < 1000) {
+        setError("Contribution amount must be at least N1,000.");
+        return;
+      }
       if (
         (scheme === "Weekly Contribution Scheme" && !remittanceWeekDay) ||
         (scheme === "Monthly Contribution Scheme" && !remittanceMonthDay)
@@ -406,7 +421,6 @@ export default function ContributionScheme() {
         return;
       }
     }
-
     if (!isValidContribution && contribution) {
       const maxPercent =
         scheme === "Weekly Contribution Scheme" ||
@@ -416,7 +430,7 @@ export default function ContributionScheme() {
       setError(`You cannot contribute more than ${maxPercent} of your income.`);
       return;
     }
-
+  
     const intlPhone = params.phone?.replace(/^0/, "+234");
     const cost = Number(assetCost?.replace(/,/g, ""));
     const [day, month, year] = params.dob.split("/");
@@ -846,8 +860,11 @@ const TricylceBreakdownDetails = React.memo(
       ) : null}
       <Input
         label={`Minimum ${
-          remittanceType === "Daily" ? "Daily" :
-          remittanceType === "Weekly" ? "Weekly" : "Monthly"
+          remittanceType === "Daily"
+            ? "Daily"
+            : remittanceType === "Weekly"
+            ? "Weekly"
+            : "Monthly"
         } Contribution`}
         placeholder="Enter Amount"
         valueType="money"
@@ -870,8 +887,11 @@ const TricylceBreakdownDetails = React.memo(
       />
       <Input
         label={`Total Minimum ${
-          remittanceType === "Daily" ? "Daily" :
-          remittanceType === "Weekly" ? "Weekly" : "Monthly"
+          remittanceType === "Daily"
+            ? "Daily"
+            : remittanceType === "Weekly"
+            ? "Weekly"
+            : "Monthly"
         } Contribution`}
         value={`₦${totalWeeklyContribution.toLocaleString()}`}
         keyboardType="phone-pad"
