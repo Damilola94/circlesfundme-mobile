@@ -6,9 +6,9 @@ import handleFetch from "@/services/api/handleFetch";
 import { resFont, resHeight } from "@/utils/utils";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ScrollView,
@@ -31,7 +31,20 @@ export default function PaymentMethodScreen() {
   const insets = useSafeAreaInsets();
   const [selected, setSelected] = useState("Card");
   const [showModal, setShowModal] = useState(false);
+  const queryClient = useQueryClient();
+  const userData = queryClient.getQueryData(["users-me"]) as {
+    data?: {
+      isCardLinked: boolean;
+    };
+  };
 
+  useEffect(() => {
+    if (userData?.data?.isCardLinked === true) {
+      router.push("/payment-setup/withdraw-setup");
+      return;
+    }
+  }, [userData])
+  
   const initPaymentMutation = useMutation({
     mutationFn: () =>
       handleFetch({
@@ -69,6 +82,10 @@ export default function PaymentMethodScreen() {
   const handleContinue = () => {
     if (selected !== "Card") {
       setShowModal(true);
+      return;
+    }
+    if (userData?.data?.isCardLinked === false) {
+      router.push("/payment-setup/withdraw-setup");
       return;
     }
     initPaymentMutation.mutate();

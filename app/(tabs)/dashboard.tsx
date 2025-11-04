@@ -29,7 +29,12 @@ import Loader from "@/components/ui/Loader";
 import SetupNotice from "@/components/ui/SetupNotice";
 import { Colors } from "@/constants/Colors";
 import handleFetch from "@/services/api/handleFetch";
-import { formatAmount, formatAmountWithThresholds, resFont, resHeight } from "@/utils/utils";
+import {
+  formatAmount,
+  formatAmountWithThresholds,
+  resFont,
+  resHeight,
+} from "@/utils/utils";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Dimensions } from "react-native";
@@ -63,7 +68,8 @@ const DashboardScreen = () => {
 
   const { data: loanData } = useQuery({
     queryKey: ["has-active-loan"],
-    queryFn: () => handleFetch({ endpoint: "financials/has-active-loan", auth: true }),
+    queryFn: () =>
+      handleFetch({ endpoint: "financials/has-active-loan", auth: true }),
   });
 
   const { data: eligibleLoanData } = useQuery({
@@ -95,6 +101,7 @@ const DashboardScreen = () => {
   const [withdrawal, setWithdrawal] = useState<
     "withdrawal" | "withdrawalFailed" | null
   >(null);
+  const [withdrawalMsg, setWithdrawalMsg] = useState<string>("");
   const [withdrawalAmount, setWithdrawalAmount] = useState("");
   const [deductChargeFromBalance, setDeductChargeFromBalance] = useState(true);
   const queryClient = useQueryClient();
@@ -107,9 +114,9 @@ const DashboardScreen = () => {
       : "notEligible";
 
   const selectedBankName = banksData?.data?.find((item: { bankCode: string }) =>
-    item?.bankCode?.toLowerCase()?.includes(
-      userData?.data?.withdrawalSetting?.bankCode?.toLowerCase() || ""
-    )
+    item?.bankCode
+      ?.toLowerCase()
+      ?.includes(userData?.data?.withdrawalSetting?.bankCode?.toLowerCase())
   )?.bankName;
 
   const data = [
@@ -159,6 +166,7 @@ const DashboardScreen = () => {
           text2: res?.message || "Unable to process withdrawal",
         });
         setWithdrawal("withdrawalFailed");
+        setWithdrawalMsg(res?.message || "Unable to process withdrawal");
         return;
       }
       Toast.show({
@@ -178,6 +186,7 @@ const DashboardScreen = () => {
         text2: error?.message || "Something went wrong",
       });
       setWithdrawal("withdrawalFailed");
+      setWithdrawalMsg(error?.message || "Something went wrong");
     },
   });
 
@@ -235,17 +244,25 @@ const DashboardScreen = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           <Modal transparent visible>
             <View style={styles.modalOverlay}>
-              <View style={[styles.modalCard, {
-                height:
-                  height * 0.3
-              }]}>
+              <View
+                style={[
+                  styles.modalCard,
+                  {
+                    height: height * 0.3,
+                  },
+                ]}
+              >
                 <TouchableOpacity
                   style={styles.closeButton}
                   onPress={() => setWaitlist(null)}
                 >
                   <AntDesign name="close-circle" size={12} color="black" />
                 </TouchableOpacity>
-                <AntDesign name="exclamation-circle" size={80} color={iconColor} />
+                <AntDesign
+                  name="exclamation-circle"
+                  size={80}
+                  color={iconColor}
+                />
                 <Text style={styles.modalTitle}>{title}</Text>
                 <Text style={styles.modalSubTitle}>{subtitle}</Text>
               </View>
@@ -308,7 +325,8 @@ const DashboardScreen = () => {
                       You&apos;re not yet eligible for a Loan
                     </Text>
                     <Text style={styles.modalSubTitle}>
-                      To qualify for a loan, you need to complete your onboarding.
+                      To qualify for a loan, you need to complete your
+                      onboarding.
                     </Text>
                   </View>
                 </View>
@@ -360,9 +378,10 @@ const DashboardScreen = () => {
                     style={[
                       styles.modalCard,
                       {
-                        height: maxLoan?.scheme === "Auto Finance Contribution"
-                          ? height * 0.9
-                          : height * 0.8,
+                        height:
+                          maxLoan?.scheme === "Auto Finance Contribution"
+                            ? height * 0.9
+                            : height * 0.8,
                       },
                     ]}
                   >
@@ -378,7 +397,9 @@ const DashboardScreen = () => {
                         <View>
                           <Text style={styles.loanLabel}>Vehicle Cost</Text>
                           <Text style={styles.loanAmount}>
-                            {formatAmountWithThresholds(eligibleLoanData?.data?.costOfVehicle)}
+                            {formatAmountWithThresholds(
+                              eligibleLoanData?.data?.costOfVehicle
+                            )}
                           </Text>
                           <View style={styles.dividerLine} />
                           <View style={styles.detailsGrid}>
@@ -405,7 +426,8 @@ const DashboardScreen = () => {
                             <Detail
                               label="Post-loan Weekly Contribution"
                               value={
-                                eligibleLoanData?.data?.postLoanWeeklyContribution
+                                eligibleLoanData?.data
+                                  ?.postLoanWeeklyContribution
                               }
                             />
                             <Detail
@@ -420,7 +442,10 @@ const DashboardScreen = () => {
                           <View style={styles.termsContainer}>
                             <Text style={styles.termsText}>
                               By clicking &apos;Proceed&apos;, you agree to the
-                              <Text style={styles.linkText}>loan terms</Text> and
+                              <Text style={styles.linkText}>
+                                loan terms
+                              </Text>{" "}
+                              and
                               <Text style={styles.linkText}>
                                 repayment schedule
                               </Text>
@@ -458,13 +483,15 @@ const DashboardScreen = () => {
                                 maxLoan?.scheme === "Daily Contribution"
                                   ? "365 Days"
                                   : maxLoan?.scheme === "Weekly Contribution"
-                                    ? "52 Weeks"
-                                    : "12 Months"
+                                  ? "52 Weeks"
+                                  : "12 Months"
                               }
                             />
                             <Detail
                               label="Post-Loan Service Charge"
-                              value={eligibleLoanData?.data?.postLoanServiceCharge}
+                              value={
+                                eligibleLoanData?.data?.postLoanServiceCharge
+                              }
                             />
                             <Detail
                               label="Total Repayment"
@@ -475,7 +502,8 @@ const DashboardScreen = () => {
                           <View style={styles.termsContainer}>
                             <Text style={styles.termsText}>
                               By clicking &apos;Proceed&apos;, you agree to the{" "}
-                              <Text style={styles.linkText}>loan terms</Text> and{" "}
+                              <Text style={styles.linkText}>loan terms</Text>{" "}
+                              and{" "}
                               <Text style={styles.linkText}>
                                 repayment schedule
                               </Text>
@@ -520,17 +548,12 @@ const DashboardScreen = () => {
                       color={"#D01D1D"}
                     />
                     <Text style={styles.modalTitle}>Withdrawal Declined</Text>
-                    <Text style={styles.modalSubTitle}>
-                      You can’t withdraw contribution right now, because you either
-                      have a running loan, or there was an error in the process.
-                      Kindly try agian, later.
-                    </Text>
+                    <Text style={styles.modalSubTitle}>{withdrawalMsg}</Text>
                   </View>
                 </View>
               </Modal>
             </TouchableWithoutFeedback>
           </KeyboardAvoidingView>
-
         );
 
       case "withdrawal":
@@ -683,7 +706,7 @@ const DashboardScreen = () => {
       {renderContributionModal()}
     </View>
   );
-}
+};
 
 export default DashboardScreen;
 

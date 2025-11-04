@@ -93,7 +93,6 @@ export default function ContributionScheme() {
     if (!contribution) return 0;
     return Number.parseFloat(contribution.replace(/,/g, "")) || 0;
   }, [contribution]);
-  console.log(typeof contributionValue, "contributionValue");
 
   const [vehicleBreakdown, setVehicleBreakdown] = useState({
     costOfVehicle: "",
@@ -409,10 +408,20 @@ export default function ContributionScheme() {
         setError("Please fill in your income and preferred contribution.");
         return;
       }
-      if (contributionValue < 1000) {
-        setError("Contribution amount must be at least N1,000.");
+
+      let minContribution = 0;
+      if (scheme === "Daily Contribution Scheme") minContribution = 1000;
+      else if (scheme === "Weekly Contribution Scheme") minContribution = 5000;
+      else if (scheme === "Monthly Contribution Scheme")
+        minContribution = 10000;
+
+      if (contributionValue < minContribution) {
+        setError(
+          `Contribution amount must be at least ₦${minContribution.toLocaleString()}.`
+        );
         return;
       }
+
       if (
         (scheme === "Weekly Contribution Scheme" && !remittanceWeekDay) ||
         (scheme === "Monthly Contribution Scheme" && !remittanceMonthDay)
@@ -430,7 +439,7 @@ export default function ContributionScheme() {
       setError(`You cannot contribute more than ${maxPercent} of your income.`);
       return;
     }
-  
+
     const intlPhone = params.phone?.replace(/^0/, "+234");
     const cost = Number(assetCost?.replace(/,/g, ""));
     const [day, month, year] = params.dob.split("/");
