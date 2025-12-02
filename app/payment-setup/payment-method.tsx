@@ -37,13 +37,14 @@ export default function PaymentMethodScreen() {
       isCardLinked: boolean;
     };
   };
+console.log(userData?.data?.isCardLinked);
 
-  useEffect(() => {
-    if (userData?.data?.isCardLinked === true) {
-      router.push("/payment-setup/withdraw-setup");
-      return;
-    }
-  }, [userData])
+  // useEffect(() => {
+  //   if (!userData?.data?.isCardLinked) {
+  //     router.push("/payment-setup/withdraw-setup");
+  //     return;
+  //   }
+  // }, [userData])
   
   const initPaymentMutation = useMutation({
     mutationFn: () =>
@@ -84,7 +85,7 @@ export default function PaymentMethodScreen() {
       setShowModal(true);
       return;
     }
-    if (userData?.data?.isCardLinked === false) {
+    if (userData?.data?.isCardLinked) {
       router.push("/payment-setup/withdraw-setup");
       return;
     }

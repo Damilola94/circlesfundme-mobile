@@ -353,6 +353,7 @@ export default function ContributionScheme() {
       setError("Please select a contribution scheme.");
       return;
     }
+    
     if (isAssetFinance) {
       if (!assetCost) {
         setError("Please enter the cost of the vehicle.");
@@ -430,6 +431,7 @@ export default function ContributionScheme() {
         return;
       }
     }
+
     if (!isValidContribution && contribution) {
       const maxPercent =
         scheme === "Weekly Contribution Scheme" ||
