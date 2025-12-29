@@ -2,12 +2,17 @@
   "expo": {
     "name": "CirclesFundMe",
     "slug": "CirclesFundMe",
-    "version": "1.0.0",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "circlesfundme",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
     "ios": {
       "supportsTablet": true,
       "backgroundColor": "#00A86B",
@@ -19,15 +24,22 @@
     },
     "android": {
       "package": "com.circlesfundme",
-      "permissions": [
-        "CAMERA",
-        "CAMERA"
-      ],
+      "permissions": ["CAMERA"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#00A86B"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "androidGradlePluginVersion": "8.3.2",
+      "compileSdkVersion": 35,
+      "targetSdkVersion": 35,
+      "buildToolsVersion": "35.0.0",
+      "ndkVersion": "27.1.12297006",
+      "packagingOptions": {
+        "jniLibs": {
+          "useLegacyPackaging": false
+        }
+      }
     },
     "web": {
       "bundler": "metro",
@@ -44,26 +56,7 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      [
-        "expo-build-properties",
-        {
-          "android": {
-            "androidGradlePluginVersion": "8.3.2",
-            "compileSdkVersion": 35,
-            "targetSdkVersion": 35,
-            "buildToolsVersion": "35.0.0",
-            "ndkVersion": "27.1.12297006",
-            "packagingOptions": {
-              "jniLibs": {
-                "useLegacyPackaging": false
-              }
-            }
-          },
-          "ios": {
-            "useFrameworks": "static"
-          }
-        }
-      ]
+      "expo-build-properties"
     ],
     "experiments": {
       "typedRoutes": true
@@ -74,9 +67,7 @@
         "projectId": "3b498a7e-f58e-465c-a7be-ec346446230b"
       }
     },
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
+    "runtimeVersion": "1.0.3",
     "updates": {
       "url": "https://u.expo.dev/3b498a7e-f58e-465c-a7be-ec346446230b"
     }

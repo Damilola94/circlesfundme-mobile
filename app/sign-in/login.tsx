@@ -53,8 +53,14 @@ export default function Login() {
           ...res.data,
           loginTime: Date.now(),
           isKycComplete: true,
+          onboardingStatus: res.data.onboardingStatus,
         };
         await AsyncStorage.setItem("data", JSON.stringify(payload));
+      }
+
+      if (res?.data?.onboardingStatus === "Completed") {
+        router.replace("/sign-in/welcome-onboarding");
+        return;
       }
 
       router.replace("/(tabs)/dashboard");

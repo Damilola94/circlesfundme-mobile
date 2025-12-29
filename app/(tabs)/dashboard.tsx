@@ -192,6 +192,9 @@ const DashboardScreen = () => {
 
   const handleWithdrawal = () => {
     const amount = parseFloat(withdrawalAmount.replace(/[^0-9.]/g, ""));
+    const balanceStr = contribution?.balance?.toString() || "0";
+    const currentBalance = parseFloat(balanceStr.replace(/[^0-9.]/g, ""));
+  
     if (!amount || amount <= 0) {
       Toast.show({
         type: "error",
@@ -199,6 +202,16 @@ const DashboardScreen = () => {
       });
       return;
     }
+  
+    if (currentBalance < amount) {
+      Toast.show({
+        type: "error",
+        text1: "Insufficient balance",
+        text2: `You only have ₦${currentBalance.toLocaleString()} available.`,
+      });
+      return;
+    }
+  
     withdrawalMutation.mutate({
       amount,
       deductChargeFromBalance,

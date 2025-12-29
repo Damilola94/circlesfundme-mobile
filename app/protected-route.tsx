@@ -27,24 +27,21 @@ export default function ProtectedRoute({ children }: Props) {
             await AsyncStorage.removeItem("data");
             router.replace("/sign-in/login");
             return;
+          }          
+          if(parsedData.onboardingStatus === "Completed"){
+            router.replace("/sign-up/personal-info");
+            return;
           }
-
-          console.log(parsedData?.accessToken, parsedData.loginTime, parsedData.isKycComplete);
-          
           if (!parsedData.isKycComplete) {
             router.replace("/sign-up/personal-info");
             return;
           }
-
-          // router.replace("/(tabs)/dashboard");
           return;
         }
-
         if (seenOnboarding === "user-onboarded-success") {
           router.replace("/sign-in/login");
           return;
         }
-
         router.replace("/sign-up/onboarding");
       } catch (err) {
         console.error("Auth check error:", err);

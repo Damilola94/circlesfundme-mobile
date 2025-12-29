@@ -62,6 +62,7 @@ export default function ClientLayout() {
       <Stack.Screen name="incomplete-kyc/verify-identity-kyc" options={{ headerShown: false }} />
 
       <Stack.Screen name="sign-in/login" options={{ headerShown: false }} />
+      <Stack.Screen name="sign-in/welcome-onboarding" options={{ headerShown: false }} />
       <Stack.Screen name="auth/forgot-password" options={{ headerShown: false }} />
       <Stack.Screen name="auth/reset-password" options={{ headerShown: false }} />
 

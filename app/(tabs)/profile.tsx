@@ -1,7 +1,7 @@
 import {
   AntDesign,
   Ionicons,
-  MaterialIcons
+  MaterialIcons,
 } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
@@ -17,9 +17,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import {
-  useSafeAreaInsets,
-} from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import ProfileOptionCard from "@/components/profile/ProfileOptionCard";
 import Button from "@/components/ui/Buttton";
@@ -33,11 +31,13 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 
+type ModalType = "logout" | "deactivate" | null;
+
 export default function ProfileScreen() {
   const userData = useUserData();
   const insets = useSafeAreaInsets();
   const router = useRouter();
-  const [logOut, setLogOutOpen] = useState<"logout" | null>(null);
+  const [activeModal, setActiveModal] = useState<ModalType>(null);
 
   const sendOtpMutation = useMutation({
     mutationFn: (navigateTo: string) =>
@@ -62,7 +62,46 @@ export default function ProfileScreen() {
         text1: "OTP Sent",
         text2: "Follow the instructions sent to your email",
       });
+
       router.push(navigateTo as any);
+    },
+
+    onError: (error: any) => {
+      Toast.show({
+        type: "error",
+        text1: "Something went wrong",
+        text2: error?.message || "Please try again later",
+      });
+    },
+  });
+
+
+  const deactivateAccountMutation = useMutation({
+    mutationFn: () =>
+      handleFetch({
+        endpoint: "users/deactivate-account",
+        method: "POST",
+      }),
+
+    onSuccess: async (res) => {
+      if (res?.statusCode !== "200" && res?.status !== 200) {
+        Toast.show({
+          type: "error",
+          text1: "Deactivation Failed",
+          text2: res?.message || "Please try again later",
+        });
+        return;
+      }
+
+      Toast.show({
+        type: "success",
+        text1: "Account Deactivated",
+        text2: "Your account has been successfully deactivated",
+      });
+
+      await AsyncStorage.removeItem("data");
+      setActiveModal(null);
+      router.replace("/sign-in/login");
     },
 
     onError: (error: any) => {
@@ -77,67 +116,80 @@ export default function ProfileScreen() {
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem("data");
-      setLogOutOpen(null);
+      setActiveModal(null);
       router.replace("/sign-in/login");
     } catch (error) {
-      console.error("Failed to logout:", error);
+      console.error("Logout failed:", error);
     }
   };
 
-  const renderLogOutModal = () => {
-    switch (logOut) {
-      case "logout":
-        return (
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-          >
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+  const renderConfirmationModal = () => {
+    if (!activeModal) return null;
 
-              <Modal transparent visible>
-                <View style={styles.modalOverlay}>
-                  <View style={styles.modalCard}>
-                    <TouchableOpacity
-                      style={styles.closeButton}
-                      onPress={() => setLogOutOpen(null)}
-                    >
-                      <AntDesign name="close-circle" size={12} color="black" />
-                    </TouchableOpacity>
-                    <AntDesign
-                      name="question-circle"
-                      size={100}
-                      color={"#004C42"}
-                    />
-                    <Text style={styles.modalTitle}>
-                      Are you sure you want to log out ?
-                    </Text>
+    const isDeactivate = activeModal === "deactivate";
 
-                    <View style={styles.buttonContainer}>
-                      <Button title="Cancel" onPress={() => setLogOutOpen(null)} />
-                      <Button
-                        title="Yes, Log Out"
-                        style={{ backgroundColor: "#C60808" }}
-                        onPress={() => handleLogout()}
-                      />
-                    </View>
-                  </View>
+    return (
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <Modal transparent visible>
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalCard}>
+                <TouchableOpacity
+                  style={styles.closeButton}
+                  onPress={() => setActiveModal(null)}
+                >
+                  <AntDesign name="close-circle" size={14} color="black" />
+                </TouchableOpacity>
+
+                <MaterialIcons
+                  name={isDeactivate ? "warning-amber" : "help-outline"}
+                  size={100}
+                  color={isDeactivate ? "#C60808" : "#004C42"}
+                />
+
+                <Text style={styles.modalTitle}>
+                  {isDeactivate
+                    ? "Deactivate Account?"
+                    : "Log out of your account?"}
+                </Text>
+
+                <Text style={styles.modalSubTitle}>
+                  {isDeactivate
+                    ? "This action will disable your account and you will no longer have access to your data."
+                    : "You can log back in anytime."}
+                </Text>
+                <View style={styles.buttonContainer}>
+                  <Button title="Cancel" onPress={() => setActiveModal(null)} />
+                  <Button
+                    title={isDeactivate ? "Deactivate" : "Log Out"}
+                    style={{ backgroundColor: "#C60808" }}
+                    disabled={
+                      isDeactivate && deactivateAccountMutation.isPending
+                    }
+                    onPress={() =>
+                      isDeactivate
+                        ? deactivateAccountMutation.mutate()
+                        : handleLogout()
+                    }
+                  />
                 </View>
-              </Modal>
-            </TouchableWithoutFeedback>
-          </KeyboardAvoidingView>
-
-        );
-
-      default:
-        return null;
-    }
+              </View>
+            </View>
+          </Modal>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    );
   };
 
   return (
     <View style={[styles.safeArea, { paddingTop: insets.top || 40 }]}>
       <View style={styles.container}>
         <Text style={styles.title}>Profile</Text>
+
         <ScrollView
-          contentContainerStyle={styles.scroolContainer}
+          contentContainerStyle={styles.scrollContainer}
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.avatarContainer}>
@@ -166,15 +218,15 @@ export default function ProfileScreen() {
             onPress={() => router.push("/profile/profile-setting")}
             icon={<Ionicons name="person-outline" size={20} color="#00C281" />}
           />
+
           <ProfileOptionCard
             title="Update Password"
             onPress={() =>
               sendOtpMutation.mutate("/profile/update-password-setting")
             }
-            icon={
-              <Ionicons name="lock-closed-outline" size={20} color="#00C281" />
-            }
+            icon={<Ionicons name="lock-closed-outline" size={20} color="#00C281" />}
           />
+
           <ProfileOptionCard
             title="Update Card Settings"
             onPress={() => {
@@ -188,21 +240,15 @@ export default function ProfileScreen() {
               }
               sendOtpMutation.mutate("/profile/verify-card-otp");
             }}
-            icon={
-              <MaterialIcons name="credit-card" size={20} color="#00C281" />
-            }
+            icon={<MaterialIcons name="credit-card" size={20} color="#00C281" />}
           />
+
           <ProfileOptionCard
             title="Payment Settings"
             onPress={() => router.push("/profile/payment-setting")}
-            icon={
-              Platform.OS === "ios" ? (
-                <Ionicons name="card-outline" size={20} color="#00C281" />
-              ) : (
-                <Ionicons name="card-outline" size={20} color="#00C281" />
-              )
-            }
+            icon={<Ionicons name="card-outline" size={20} color="#00C281" />}
           />
+
           <ProfileOptionCard
             title="Notifications"
             onPress={() => router.push("/profile/notification")}
@@ -215,12 +261,24 @@ export default function ProfileScreen() {
             }
           />
           <ProfileOptionCard
+            title="Deactivate Account"
+            onPress={() => setActiveModal("deactivate")}
+            icon={
+              <MaterialIcons
+                name="dangerous"
+                size={20}
+                color="#D01D1D"
+              />
+            }
+            isLogout
+          />
+          <ProfileOptionCard
             title="Log Out"
-            onPress={() => setLogOutOpen("logout")}
+            onPress={() => setActiveModal("logout")}
             icon={<Ionicons name="log-out-outline" size={20} color="#D01D1D" />}
             isLogout
           />
-          {renderLogOutModal()}
+          {renderConfirmationModal()}
         </ScrollView>
       </View>
     </View>
@@ -235,8 +293,8 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
   },
-  scroolContainer: {
-    paddingBottom: resHeight(5),
+  scrollContainer: {
+    paddingBottom: resHeight(15),
   },
   title: {
     fontSize: resFont(22),
@@ -266,45 +324,31 @@ const styles = StyleSheet.create({
   },
   modalCard: {
     width: "90%",
-    height: "50%",
-    backgroundColor: "white",
+    backgroundColor: "#fff",
     padding: 20,
     borderRadius: resHeight(3),
     alignItems: "center",
-    justifyContent: "center",
   },
   closeButton: {
     position: "absolute",
     top: 15,
     right: 15,
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    backgroundColor: "rgba(0, 0, 0, 0.1)",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 1,
   },
   modalTitle: {
-    fontSize: resFont(22),
+    fontSize: resFont(20),
     fontFamily: "OutfitMedium",
     textAlign: "center",
-    marginVertical: 20,
+    marginTop: 20,
+  },
+  modalSubTitle: {
+    fontSize: resFont(13),
+    color: Colors.dark.textLight,
+    textAlign: "center",
+    marginVertical: 15,
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "center",
     gap: 10,
-    width: "100%",
-    marginTop: 20,
-    padding: 20,
-    paddingTop: 10,
-    backgroundColor: "#fff",
-  },
-  modalSubTitle: {
-    color: Colors.dark.textLight,
-    fontSize: resFont(12),
-    textAlign: "center",
-    marginBottom: 20,
+    marginTop: 10,
   },
 });
