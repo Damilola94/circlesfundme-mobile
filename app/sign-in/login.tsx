@@ -102,9 +102,9 @@ export default function Login() {
           <Text style={styles.subText}>Welcome back to Circlesfundme</Text>
 
           <Input
-            label="Email Address or Phone Number"
+            label="Email Address"
             value={emailOrPhone}
-            placeholder="Enter Your Email Address or Phone Number"
+            placeholder="Enter Your Email Address"
             onChangeText={setEmailOrPhone}
           />
 

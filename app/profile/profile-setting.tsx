@@ -247,16 +247,19 @@ export default function ProfileSetting() {
       item.name.toLowerCase().includes(scheme.toLowerCase())
   )?.id;
 
-
-  const isAssetFinance = scheme === "Auto Financing" || "Tricycle Financing";
-
+  const assetFinanceSchemes = [
+    "Auto Financing Contribution Scheme",
+    "Tricycle Financing",
+  ];
+  
+  const isAssetFinance = assetFinanceSchemes.includes(scheme);
+  
   const handleSubmit = () => {
     if (!userData?.data) return;
 
     const [firstName, ...lastNameParts] = fullName.trim().split(" ");
     const lastName = lastNameParts.join(" ");
     const selectedGender = gender === "Not Specified" ? "NotSet" : gender;
-console.log(income);
 
     const payload = {
       firstName,

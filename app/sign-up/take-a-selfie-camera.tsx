@@ -1,9 +1,18 @@
 import PhotoPreviewSection from "@/components/ui/PhotoPreviewSection";
 import { Colors } from "@/constants/Colors";
-import { uploadDocument } from "@/utils/uploadDocument";
+import handleFetch from "@/services/api/handleFetch";
 import { AntDesign } from "@expo/vector-icons";
-import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
-import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
+import { useMutation } from "@tanstack/react-query";
+import {
+  CameraType,
+  CameraView,
+  useCameraPermissions,
+} from "expo-camera";
+import {
+  useLocalSearchParams,
+  useNavigation,
+  useRouter,
+} from "expo-router";
 import { useRef, useState } from "react";
 import {
   ActivityIndicator,
@@ -16,15 +25,17 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
 export default function Camera() {
   const [facing, setFacing] = useState<CameraType>("front");
-  const [permission, requestPermission] = useCameraPermissions();
-  const router = useRouter();
   const [photo, setPhoto] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+
   const cameraRef = useRef<CameraView | null>(null);
+  const router = useRouter();
   const navigation = useNavigation();
+  const [permission, requestPermission] = useCameraPermissions();
 
   const {
     fullName,
@@ -54,58 +65,31 @@ export default function Camera() {
     utilityBillType: string;
   }>();
 
-  if (!permission) {
-    return <View />;
-  }
+  const verifyBvnSelfieMutation = useMutation({
+    mutationFn: (formData: FormData) =>
+      handleFetch({
+        endpoint: "accounts/verify-bvn-selfie",
+        method: "POST",
+        body: formData,
+        auth:true,
+        multipart: true,
+      }),
 
-  if (!permission?.granted) {
-    return (
-      <View style={styles.permissionContainer}>
-        <Text style={styles.permissionText}>
-          Camera permission is required.
-        </Text>
-        <Button title="Grant Permission" onPress={requestPermission} />
-      </View>
-    );
-  }
+    onSuccess: (res: any) => {
+      if (res?.statusCode !== "200" && res?.status !== 200) {
+        Toast.show({
+          type: "error",
+          text1: "Verification Failed",
+          text2: res?.message || "BVN selfie verification failed",
+        });
+        return;
+      }
 
-  function toggleCameraFacing() {
-    setFacing((current) => (current === "back" ? "front" : "back"));
-  }
-
-  const handleTakePhoto = async () => {
-    if (cameraRef.current) {
-      const photo = await cameraRef.current.takePictureAsync({
-        quality: 1,
-        base64: true,
-      });
-      setPhoto(photo);
-    }
-  };
-
-  const handleRetakePhoto = () => setPhoto(null);
-
-  const handleProceed = async () => {
-    try {
-      setLoading(true);
-
-      const uri = photo.uri;
-      const fileName = uri.split("/").pop() || `selfie_${Date.now()}.jpg`;
-
-      const ext = fileName.split(".").pop()?.toLowerCase();
-      let fileType = "image/jpeg";
-      if (ext === "png") fileType = "image/png";
-      else if (ext === "jpg" || ext === "jpeg") fileType = "image/jpeg";
-      else if (ext === "heic") fileType = "image/heic";
-
-      const uploadedUrl = await uploadDocument({
-        uri,
-        name: fileName,
-        type: fileType,
+      Toast.show({
+        type: "success",
+        text1: "Verification Successful",
       });
 
-      setLoading(false);
-      console.log(uploadedUrl, "uploadedUrl - id");
       router.replace({
         pathname: "/sign-up/contribution-scheme",
         params: {
@@ -121,27 +105,95 @@ export default function Camera() {
           utilityBillUrl,
           utilityBillName,
           utilityBillType,
-          selfieUrl: uploadedUrl,
-          selfieType: fileType,
-          selfieName: fileName,
         },
       });
-    } catch (error: any) {
+    },
+
+    onError: (error: any) => {
+      Toast.show({
+        type: "error",
+        text1: "Error",
+        text2: error?.message || "Failed to verify BVN selfie",
+      });
+    },
+
+    onSettled: () => {
       setLoading(false);
-      console.error("Selfie upload failed:", error.message || error);
-      alert("Failed to upload selfie. Please try again.");
-    }
+    },
+  });
+
+  if (!permission) {
+    return <View />;
+  }
+
+  if (!permission.granted) {
+    return (
+      <View style={styles.permissionContainer}>
+        <Text style={styles.permissionText}>
+          Camera permission is required.
+        </Text>
+        <Button title="Grant Permission" onPress={requestPermission} />
+      </View>
+    );
+  }
+
+  const toggleCameraFacing = () => {
+    setFacing((current) => (current === "back" ? "front" : "back"));
   };
 
-  if (photo)
+  const handleTakePhoto = async () => {
+    if (!cameraRef.current) return;
+
+    const capturedPhoto = await cameraRef.current.takePictureAsync({
+      quality: 1,
+      base64: true,
+    });
+
+    setPhoto(capturedPhoto);
+  };
+
+  const handleRetakePhoto = () => setPhoto(null);
+
+  const handleProceed = () => {
+    if (!photo?.uri) {
+      Toast.show({
+        type: "error",
+        text1: "No selfie captured",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    const uri = photo.uri;
+    const fileName = uri.split("/").pop() || `selfie_${Date.now()}.jpg`;
+    const ext = fileName.split(".").pop()?.toLowerCase();
+
+    let mimeType = "image/jpeg";
+    if (ext === "png") mimeType = "image/png";
+    if (ext === "heic") mimeType = "image/heic";
+
+    const formData = new FormData();
+    formData.append("bvn", bvn);
+    formData.append("selfie", {
+      uri,
+      name: fileName,
+      type: mimeType,
+    } as any);
+
+    verifyBvnSelfieMutation.mutate(formData);
+  };
+
+  if (photo) {
     return (
       <View style={{ flex: 1 }}>
         {loading && (
           <View style={styles.loadingOverlay}>
             <ActivityIndicator size="large" color={Colors.dark.primary} />
-            <Text style={styles.loadingText}>Uploading selfie...</Text>
+            <Text style={styles.loadingText}>Verifying BVN and selfie...</Text>
           </View>
         )}
+
         <PhotoPreviewSection
           photo={photo}
           handleRetakePhoto={handleRetakePhoto}
@@ -149,6 +201,7 @@ export default function Camera() {
         />
       </View>
     );
+  }
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -156,9 +209,9 @@ export default function Camera() {
         <StatusBar hidden />
 
         <CameraView
+          ref={cameraRef}
           style={StyleSheet.absoluteFill}
           facing={facing}
-          ref={cameraRef}
         />
 
         <View style={styles.backButton}>
@@ -171,6 +224,7 @@ export default function Camera() {
           <TouchableOpacity style={styles.button} onPress={toggleCameraFacing}>
             <AntDesign name="retweet" size={44} color={Colors.dark.primary} />
           </TouchableOpacity>
+
           <TouchableOpacity style={styles.button} onPress={handleTakePhoto}>
             <AntDesign name="camera" size={44} color={Colors.dark.primary} />
           </TouchableOpacity>
