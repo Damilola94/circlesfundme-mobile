@@ -58,7 +58,9 @@ export default function Login() {
         await AsyncStorage.setItem("data", JSON.stringify(payload));
       }
 
-      if (res?.data?.onboardingStatus === "Completed") {
+      console.log(res?.data?.onboardingStatus);
+      
+      if (res?.data?.onboardingStatus === "InProgress") {
         router.replace("/sign-in/welcome-onboarding");
         return;
       }

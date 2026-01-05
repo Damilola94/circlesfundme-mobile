@@ -37,8 +37,6 @@ export default function PaymentMethodScreen() {
       isCardLinked: boolean;
     };
   };
-console.log(userData?.data?.isCardLinked);
-
   // useEffect(() => {
   //   if (!userData?.data?.isCardLinked) {
   //     router.push("/payment-setup/withdraw-setup");

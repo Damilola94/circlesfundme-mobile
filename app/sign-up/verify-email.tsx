@@ -89,24 +89,23 @@ export default function VerifyEmail() {
       });
     },
   });
-  
-const handleVerify = () => {
-  const trimmedOtp = otp?.trim();
-  if (!trimmedOtp) {
-    Toast.show({ type: "error", text1: "Please enter the OTP" });
-    return;
-  }
-  if (trimmedOtp.length !== 6) {
-    Toast.show({ type: "error", text1: "OTP must be exactly 6 digits" });
-    return;
-  }
-  if (!/^\d{6}$/.test(trimmedOtp)) {
-    Toast.show({ type: "error", text1: "OTP must contain only numbers" });
-    return;
-  }
-  
-  verifyMutation.mutate(trimmedOtp);
-};
+
+  const handleVerify = () => {
+    const trimmedOtp = otp?.trim();
+    if (!trimmedOtp) {
+      Toast.show({ type: "error", text1: "Please enter the OTP" });
+      return;
+    }
+    if (trimmedOtp.length !== 6) {
+      Toast.show({ type: "error", text1: "OTP must be exactly 6 digits" });
+      return;
+    }
+    if (!/^\d{6}$/.test(trimmedOtp)) {
+      Toast.show({ type: "error", text1: "OTP must contain only numbers" });
+      return;
+    }
+    verifyMutation.mutate(trimmedOtp);
+  };
 
   useEffect(() => {
     let countdown: ReturnType<typeof setInterval>;

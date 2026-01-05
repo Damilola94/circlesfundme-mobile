@@ -27,9 +27,9 @@ export default function ProtectedRoute({ children }: Props) {
             await AsyncStorage.removeItem("data");
             router.replace("/sign-in/login");
             return;
-          }          
-          if(parsedData.onboardingStatus === "Completed"){
-            router.replace("/sign-up/personal-info");
+          }
+          if (parsedData.onboardingStatus === "InProgress") {
+            router.replace("/sign-in/welcome-onboarding");
             return;
           }
           if (!parsedData.isKycComplete) {

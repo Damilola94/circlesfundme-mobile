@@ -268,6 +268,7 @@ export default function ContributionScheme() {
       const stored = await AsyncStorage.getItem("data");
       let session = stored ? JSON.parse(stored) : {};
       session.isKycComplete = true;
+      session.onboardingStatus = "Completed";
       await AsyncStorage.setItem("data", JSON.stringify(session));
       router.replace("/(tabs)/dashboard");
     },

@@ -1,3 +1,5 @@
+"use client";
+
 import Button from "@/components/ui/Buttton";
 import { Colors } from "@/constants/Colors";
 import { resFont, resHeight } from "@/utils/utils";
@@ -5,11 +7,20 @@ import { useRouter } from "expo-router";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Video } from "expo-av";
+import { VideoView, useVideoPlayer } from "expo-video";
 
 export default function WelcomeOnboarding() {
   const insets = useSafeAreaInsets();
   const router = useRouter();
+
+  const player = useVideoPlayer(
+    require("../../assets/images/onboarding.mp4"),
+    (player) => {
+      player.loop = true;
+      player.muted = true;
+      player.play();
+    }
+  );
 
   return (
     <View
@@ -22,12 +33,10 @@ export default function WelcomeOnboarding() {
       ]}
     >
       <View style={styles.content}>
-        <Video
-          source={require("../../assets/images/onboarding.mp4")}
+        <VideoView
+          player={player}
           style={styles.video}
-          isLooping
-          shouldPlay
-          isMuted
+          contentFit="cover"
         />
 
         <Text style={styles.title}>Welcome to CirclesFundMe</Text>
@@ -35,10 +44,13 @@ export default function WelcomeOnboarding() {
         <Text style={styles.subTitle}>You’re almost there!</Text>
 
         <Text style={styles.subTitle}>
-          Your onboarding isn’t completed yet.{" "}
+          Your onboarding isn’t completed yet.
         </Text>
 
-        <Text style={styles.subTitle}>Complete it to unlock all features.</Text>
+        <Text style={styles.subTitle}>
+          Complete it to unlock all features.
+        </Text>
+
         <Button
           title="Complete Onboarding"
           onPress={() => router.replace("/sign-up/personal-info")}

@@ -20,9 +20,10 @@ export default function Index() {
             router.replace("/sign-in/login");
             return;
           }
+          if (parsedData.onboardingStatus === "InProgress") {
+            router.replace("/sign-in/welcome-onboarding");
+          }
           if (parsedData.isKycComplete) {
-            console.log(parsedData.isKycComplete, "isKycComplete - splash");
-            
             router.replace("/(tabs)/dashboard");
           } else {
             router.replace("/sign-up/personal-info");
@@ -37,7 +38,6 @@ export default function Index() {
         router.replace("/sign-up/onboarding");
       }
     };
-
     init();
   }, [router]);
 

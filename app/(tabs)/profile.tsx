@@ -75,12 +75,12 @@ export default function ProfileScreen() {
     },
   });
 
-
   const deactivateAccountMutation = useMutation({
     mutationFn: () =>
       handleFetch({
         endpoint: "users/deactivate-account",
         method: "POST",
+        auth: true,
       }),
 
     onSuccess: async (res) => {

@@ -24,7 +24,9 @@
     },
     "android": {
       "package": "com.circlesfundme",
-      "permissions": ["CAMERA"],
+      "permissions": [
+        "CAMERA"
+      ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#00A86B"
@@ -56,7 +58,8 @@
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-build-properties"
+      "expo-build-properties",
+      "expo-video"
     ],
     "experiments": {
       "typedRoutes": true
