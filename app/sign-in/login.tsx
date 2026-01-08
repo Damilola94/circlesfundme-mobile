@@ -59,7 +59,7 @@ export default function Login() {
       }
 
       console.log(res?.data?.onboardingStatus);
-      
+
       if (res?.data?.onboardingStatus === "InProgress") {
         router.replace("/sign-in/welcome-onboarding");
         return;

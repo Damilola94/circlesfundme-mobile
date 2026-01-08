@@ -149,9 +149,17 @@ export default function ContributionScheme() {
     )?.id;
   }, [schemesData, scheme]);
 
+  // const extraContribution = toNumber(additionalWeeklyContribution);
+  // const totalWeeklyContribution =
+  //   extraContribution + toNumber(vehicleBreakdown.preLoanServiceCharge);
+
   const extraContribution = toNumber(additionalWeeklyContribution);
+  const preLoanCharge =
+    remittanceType === "Weekly"
+      ? toNumber(vehicleBreakdown.preLoanServiceCharge) / 4
+      : toNumber(vehicleBreakdown.preLoanServiceCharge);
   const totalWeeklyContribution =
-    extraContribution + toNumber(vehicleBreakdown.preLoanServiceCharge);
+    extraContribution + preLoanCharge;
 
   const breakdownMutation = useMutation({
     mutationFn: (body: any) =>
@@ -354,7 +362,7 @@ export default function ContributionScheme() {
       setError("Please select a contribution scheme.");
       return;
     }
-    
+
     if (isAssetFinance) {
       if (!assetCost) {
         setError("Please enter the cost of the vehicle.");
@@ -436,7 +444,7 @@ export default function ContributionScheme() {
     if (!isValidContribution && contribution) {
       const maxPercent =
         scheme === "Weekly Contribution Scheme" ||
-        scheme === "Daily Contribution Scheme"
+          scheme === "Daily Contribution Scheme"
           ? "20%"
           : "30%";
       setError(`You cannot contribute more than ${maxPercent} of your income.`);
@@ -550,6 +558,7 @@ export default function ContributionScheme() {
               {shouldRenderDetails && (
                 <VehicleBreakdownDetails
                   vehicleBreakdown={vehicleBreakdown}
+                  preLoanCharge={preLoanCharge}
                   remittanceType={remittanceType}
                   setRemittanceType={setRemittanceType}
                   remittanceWeekDay={remittanceWeekDay}
@@ -582,6 +591,7 @@ export default function ContributionScheme() {
               {shouldRenderDetails && (
                 <TricylceBreakdownDetails
                   vehicleBreakdown={vehicleBreakdown}
+                  preLoanCharge={preLoanCharge}
                   remittanceType={remittanceType}
                   setRemittanceType={setRemittanceType}
                   remittanceWeekDay={remittanceWeekDay}
@@ -604,13 +614,12 @@ export default function ContributionScheme() {
           {shouldRenderRegularDetails && (
             <View>
               <Input
-                label={`What's your ${
-                  scheme === "Weekly Contribution Scheme"
-                    ? "Weekly Sales Revenue"
-                    : scheme === "Daily Contribution Scheme"
+                label={`What's your ${scheme === "Weekly Contribution Scheme"
+                  ? "Weekly Sales Revenue"
+                  : scheme === "Daily Contribution Scheme"
                     ? "Daily Sales Revenue"
                     : "Monthly Income"
-                } (NGN)?`}
+                  } (NGN)?`}
                 valueType="money"
                 placeholder="Enter Amount"
                 value={income}
@@ -619,13 +628,12 @@ export default function ContributionScheme() {
               />
 
               <Input
-                label={`What's your preferred ${
-                  scheme === "Weekly Contribution Scheme"
-                    ? "weekly"
-                    : scheme === "Daily Contribution Scheme"
+                label={`What's your preferred ${scheme === "Weekly Contribution Scheme"
+                  ? "weekly"
+                  : scheme === "Daily Contribution Scheme"
                     ? "daily"
                     : "monthly"
-                } contribution`}
+                  } contribution`}
                 placeholder="Enter Amount"
                 valueType="money"
                 value={contribution}
@@ -642,8 +650,8 @@ export default function ContributionScheme() {
                           {scheme === "Weekly Contribution Scheme"
                             ? "52x of your weekly contribution"
                             : scheme === "Daily Contribution Scheme"
-                            ? "365x of your daily contribution"
-                            : "12x of your monthly contribution"}
+                              ? "365x of your daily contribution"
+                              : "12x of your monthly contribution"}
                         </Text>
                       </View>
                       <Text style={styles.boldText}>
@@ -671,11 +679,10 @@ export default function ContributionScheme() {
                           Repayment Duration
                         </Text>
                       </View>
-                      <Text style={styles.boldText}>{`${
-                        scheme.includes("Weekly")
-                          ? "52 weeks/1 yr"
-                          : "12 months/1yr"
-                      }`}</Text>
+                      <Text style={styles.boldText}>{`${scheme.includes("Weekly")
+                        ? "52 weeks/1 yr"
+                        : "12 months/1yr"
+                        }`}</Text>
                     </View>
 
                     <View style={styles.groupText}>
@@ -685,8 +692,8 @@ export default function ContributionScheme() {
                           {scheme === "Weekly Contribution Scheme"
                             ? "52x of your weekly contribution"
                             : scheme === "Daily Contribution Scheme"
-                            ? "365x of your daily contribution"
-                            : "12x of your monthly contribution"}
+                              ? "365x of your daily contribution"
+                              : "12x of your monthly contribution"}
                         </Text>
                       </View>
                       <Text style={styles.boldText}>
@@ -781,6 +788,7 @@ const TricylceBreakdownDetails = React.memo(
   ({
     vehicleBreakdown,
     remittanceType,
+    preLoanCharge,
     setRemittanceType,
     remittanceWeekDay,
     setRemittanceWeekDay,
@@ -834,16 +842,6 @@ const TricylceBreakdownDetails = React.memo(
         infoTitle="Loan Management Fee over 4 years"
         infoContent="Annually: 6% of Asset Value. Total for 4 Years: Annual Loan Management Fee × 4"
       />
-      <Input
-        label="Pre-Loan Service Charge"
-        placeholder="Enter Amount"
-        value={`₦${vehicleBreakdown.preLoanServiceCharge}`}
-        keyboardType="phone-pad"
-        editable={false}
-        showInfoIcon={true}
-        infoTitle="Loan Management Fee over 4 years"
-        infoContent="A monthly server charge as you save up your 10% equity."
-      />
       <SelectInput
         label="Remittance Type"
         value={remittanceType}
@@ -871,50 +869,55 @@ const TricylceBreakdownDetails = React.memo(
         />
       ) : null}
       <Input
-        label={`Minimum ${
-          remittanceType === "Daily"
-            ? "Daily"
-            : remittanceType === "Weekly"
+        label="Pre-Loan Service Charge"
+        placeholder="Enter Amount"
+        value={formatAmount(preLoanCharge)}
+        keyboardType="phone-pad"
+        editable={false}
+        showInfoIcon={true}
+        infoTitle="Loan Management Fee over 4 years"
+        infoContent="A monthly server charge as you save up your 10% equity."
+      />
+      <Input
+        label={`Minimum ${remittanceType === "Daily"
+          ? "Daily"
+          : remittanceType === "Weekly"
             ? "Weekly"
             : "Monthly"
-        } Contribution`}
+          } Contribution`}
         placeholder="Enter Amount"
         valueType="money"
         value={additionalWeeklyContribution}
         onChangeText={setAdditionalWeeklyContribution}
         keyboardType="phone-pad"
         showInfoIcon={true}
-        infoTitle={`Minimum ${
-          remittanceType === "Weekly" ? "Weekly" : "Monthly"
-        } Contribution`}
+        infoTitle={`Minimum ${remittanceType === "Weekly" ? "Weekly" : "Monthly"
+          } Contribution`}
         infoContent={`Enter any amount from ₦${vehicleBreakdown.baseContributionAmount} and above to save toward your 10% equity down payment.`}
         isInvalid={isAdditionalContributionInvalid}
         errorMessage={
           isAdditionalContributionInvalid
             ? `Amount must be ${formatAmount(
-                vehicleBreakdown.baseContributionAmount
-              )} or more.`
+              vehicleBreakdown.baseContributionAmount
+            )} or more.`
             : undefined
         }
       />
       <Input
-        label={`Total Minimum ${
-          remittanceType === "Daily"
-            ? "Daily"
-            : remittanceType === "Weekly"
+        label={`Total Minimum ${remittanceType === "Daily"
+          ? "Daily"
+          : remittanceType === "Weekly"
             ? "Weekly"
             : "Monthly"
-        } Contribution`}
+          } Contribution`}
         value={`₦${totalWeeklyContribution.toLocaleString()}`}
         keyboardType="phone-pad"
         editable={false}
         showInfoIcon={true}
-        infoTitle={`Your ${
-          remittanceType === "Weekly" ? "weekly" : "monthly"
-        } contribution plus the pre-loan service charge.`}
-        infoContent={`Your ${
-          remittanceType === "Weekly" ? "weekly" : "monthly"
-        } contribution plus the pre-loan service charge.`}
+        infoTitle={`Your ${remittanceType === "Weekly" ? "weekly" : "monthly"
+          } contribution plus the pre-loan service charge.`}
+        infoContent={`Your ${remittanceType === "Weekly" ? "weekly" : "monthly"
+          } contribution plus the pre-loan service charge.`}
       />
       <Input
         label="Total Repayment"
@@ -944,6 +947,7 @@ const VehicleBreakdownDetails = React.memo(
   ({
     vehicleBreakdown,
     remittanceType,
+    preLoanCharge,
     setRemittanceType,
     remittanceWeekDay,
     setRemittanceWeekDay,
@@ -1005,16 +1009,6 @@ const VehicleBreakdownDetails = React.memo(
         infoTitle="Loan Management Fee over 4 years"
         infoContent="Annually: 6% of Asset Value. Total for 4 Years: Annual Loan Management Fee × 4"
       />
-      <Input
-        label="Pre-Loan Service Charge"
-        placeholder="Enter Amount"
-        value={`₦${vehicleBreakdown.preLoanServiceCharge}`}
-        keyboardType="phone-pad"
-        editable={false}
-        showInfoIcon={true}
-        infoTitle="Loan Management Fee over 4 years"
-        infoContent="A monthly server charge as you save up your 10% equity."
-      />
       <SelectInput
         label="Remittance Type"
         value={remittanceType}
@@ -1042,42 +1036,48 @@ const VehicleBreakdownDetails = React.memo(
         />
       ) : null}
       <Input
-        label={`Minimum ${
-          remittanceType === "Weekly" ? "Weekly" : "Monthly"
-        } Contribution`}
+        label="Pre-Loan Service Charge"
+        placeholder="Enter Amount"
+        value={formatAmount(preLoanCharge)}
+        keyboardType="phone-pad"
+        editable={false}
+        showInfoIcon={true}
+        infoTitle="Loan Management Fee over 4 years"
+        infoContent="A monthly server charge as you save up your 10% equity."
+      />
+
+      <Input
+        label={`Minimum ${remittanceType === "Weekly" ? "Weekly" : "Monthly"
+          } Contribution`}
         placeholder="Enter Amount"
         valueType="money"
         value={additionalWeeklyContribution}
         onChangeText={setAdditionalWeeklyContribution}
         keyboardType="phone-pad"
         showInfoIcon={true}
-        infoTitle={`Minimum ${
-          remittanceType === "Weekly" ? "Weekly" : "Monthly"
-        } Contribution`}
+        infoTitle={`Minimum ${remittanceType === "Weekly" ? "Weekly" : "Monthly"
+          } Contribution`}
         infoContent={`Enter any amount from ₦${vehicleBreakdown.baseContributionAmount} and above to save toward your 10% equity down payment.`}
         isInvalid={isAdditionalContributionInvalid}
         errorMessage={
           isAdditionalContributionInvalid
             ? `Amount must be ${formatAmount(
-                vehicleBreakdown.baseContributionAmount
-              )} or more.`
+              vehicleBreakdown.baseContributionAmount
+            )} or more.`
             : undefined
         }
       />
       <Input
-        label={`Total Minimum ${
-          remittanceType === "Weekly" ? "Weekly" : "Monthly"
-        } Contribution`}
+        label={`Total Minimum ${remittanceType === "Weekly" ? "Weekly" : "Monthly"
+          } Contribution`}
         value={`₦${totalWeeklyContribution.toLocaleString()}`}
         keyboardType="phone-pad"
         editable={false}
         showInfoIcon={true}
-        infoTitle={`Your ${
-          remittanceType === "Weekly" ? "weekly" : "monthly"
-        } contribution plus the pre-loan service charge.`}
-        infoContent={`Your ${
-          remittanceType === "Weekly" ? "weekly" : "monthly"
-        } contribution plus the pre-loan service charge.`}
+        infoTitle={`Your ${remittanceType === "Weekly" ? "weekly" : "monthly"
+          } contribution plus the pre-loan service charge.`}
+        infoContent={`Your ${remittanceType === "Weekly" ? "weekly" : "monthly"
+          } contribution plus the pre-loan service charge.`}
       />
       <Input
         label="Total Repayment"
