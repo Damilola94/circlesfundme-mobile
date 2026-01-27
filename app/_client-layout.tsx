@@ -66,6 +66,12 @@ export default function ClientLayout() {
       <Stack.Screen name="auth/forgot-password" options={{ headerShown: false }} />
       <Stack.Screen name="auth/reset-password" options={{ headerShown: false }} />
 
+      <Stack.Screen name="contribution-bank-payment/payment-method" options={{ headerShown: false }} />
+      <Stack.Screen name="contribution-bank-payment/card-info" options={{ headerShown: false }} />
+
+      <Stack.Screen name="loan-bank-payment/payment-method" options={{ headerShown: false }} />
+      <Stack.Screen name="loan-bank-payment/card-info" options={{ headerShown: false }} />
+
       <Stack.Screen name="payment-setup/card-info" options={{ headerShown: false }} />
       <Stack.Screen name="payment-setup/payment-method" options={{ headerShown: false }} />
       <Stack.Screen name="payment-setup/confirm-beneficiary" options={{ headerShown: false }} />

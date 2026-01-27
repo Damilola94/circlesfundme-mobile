@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import ProgressStepsBar from "@/components/ui/ProgressStepsBar";
 import SelectInput from "@/components/ui/SelectInput";
@@ -31,8 +31,8 @@ export default function PersonalInfo() {
       });
       return;
     }
-  
-    const nameParts = fullName.trim().split(/\s+/); 
+
+    const nameParts = fullName.trim().split(/\s+/);
     if (nameParts.length < 2) {
       Toast.show({
         type: "error",
@@ -41,11 +41,11 @@ export default function PersonalInfo() {
       });
       return;
     }
-  
+
     const phoneDigits = phone.replace(/\D/g, "");
-  
+
     const isValidNigerianPhone = /^0[789][01]\d{8}$/.test(phoneDigits);
-  
+
     if (!isValidNigerianPhone) {
       Toast.show({
         type: "error",
@@ -55,7 +55,7 @@ export default function PersonalInfo() {
       });
       return;
     }
-  
+
     const age = moment().diff(moment(dob, "DD/MM/YYYY"), "years");
     if (age < 18) {
       Toast.show({
@@ -65,7 +65,7 @@ export default function PersonalInfo() {
       });
       return;
     }
-  const selectedGender = gender === "Not Specified" ? "NotSet" : gender;
+    const selectedGender = gender === "Not Specified" ? "NotSet" : gender;
     router.replace({
       pathname: "/sign-up/verify-identity",
       params: {
@@ -76,7 +76,7 @@ export default function PersonalInfo() {
       },
     });
   };
-  
+
   return (
     <ScrollView
       contentContainerStyle={[
@@ -119,6 +119,7 @@ export default function PersonalInfo() {
         isVisible={showPicker}
         mode="date"
         maximumDate={new Date()}
+        minimumDate={new Date(1900, 0, 1)}
         onConfirm={(date) => {
           setDob(moment(date).format("DD/MM/YYYY"));
           setShowPicker(false);
@@ -132,8 +133,14 @@ export default function PersonalInfo() {
         placeholder="Select Gender"
         options={["Male", "Female", "Not Specified"]}
       />
-      <View style={{ marginBottom: resHeight(10) }} />
+      <View style={{ marginBottom: resHeight(5) }} />
       <Button title="Continue" onPress={handleSubmit} />
+      <View style={styles.groupText}>
+        <Text style={styles.footerText}>Already have an account? </Text>
+        <TouchableOpacity onPress={() => router.replace("/sign-in/login")}>
+          <Text style={styles.footerLink}>Sign In</Text>
+        </TouchableOpacity>
+      </View>
     </ScrollView>
   );
 }
@@ -153,5 +160,21 @@ const styles = StyleSheet.create({
     color: Colors.dark.textLight,
     marginBottom: resHeight(5),
     fontFamily: "OutfitRegular",
+  },
+  footerText: {
+    textAlign: "center",
+    fontSize: resFont(12),
+    color: Colors.dark.background,
+    fontFamily: "OutfitMedium",
+  },
+  footerLink: {
+    color: Colors.dark.primary,
+    fontWeight: "500",
+    fontFamily: "OutfitMedium",
+  },
+  groupText: {
+    flexDirection: "row",
+    marginTop: resHeight(4),
+    justifyContent: "center",
   },
 });

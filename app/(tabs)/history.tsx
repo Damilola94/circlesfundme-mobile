@@ -117,7 +117,7 @@ export default function LoanScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
+    padding: 20,
     flex: 1,
   },
   title: {

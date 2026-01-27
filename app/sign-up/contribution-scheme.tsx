@@ -43,7 +43,7 @@ const WEEK_DAYS = [
   "Friday",
   "Saturday",
 ];
-const REMITTANCE_TYPES = ["Weekly", "Monthly"];
+const REMITTANCE_TYPES = ["Daily", "Weekly", "Monthly"];
 const REMITTANCE_TYPES_TRICYLCE = ["Daily", "Weekly", "Monthly"];
 const MONTH_DAY_LABELS = monthDayOptions.map((opt) => opt.label);
 
@@ -83,6 +83,7 @@ export default function ContributionScheme() {
     useState("");
   const [isAdditionalContributionInvalid, setIsAdditionalContributionInvalid] =
     useState(false);
+  const [referralCode, setReferralCode] = useState("");
 
   const incomeValue = useMemo(() => {
     if (!income) return 0;
@@ -115,6 +116,8 @@ export default function ContributionScheme() {
     eligibleLoan: "",
     preLoanServiceCharge: "",
     postLoanServiceCharge: "",
+    eligibleLoanAfterInsurance: "",
+    insurance: "",
     totalRepayment: "",
     repaymentTerm: "",
   });
@@ -155,9 +158,11 @@ export default function ContributionScheme() {
 
   const extraContribution = toNumber(additionalWeeklyContribution);
   const preLoanCharge =
-    remittanceType === "Weekly"
-      ? toNumber(vehicleBreakdown.preLoanServiceCharge) / 4
-      : toNumber(vehicleBreakdown.preLoanServiceCharge);
+    remittanceType === "Daily"
+      ? toNumber(vehicleBreakdown.preLoanServiceCharge) / 28
+      : remittanceType === "Weekly"
+        ? toNumber(vehicleBreakdown.preLoanServiceCharge) / 4
+        : toNumber(vehicleBreakdown.preLoanServiceCharge);
   const totalWeeklyContribution =
     extraContribution + preLoanCharge;
 
@@ -231,6 +236,8 @@ export default function ContributionScheme() {
           principalLoan: breakdown.principalLoan || "",
           loanManagementFee: breakdown.loanManagementFee || "",
           eligibleLoan: breakdown.eligibleLoan || "",
+          insurance: breakdown.insurance || "",
+          eligibleLoanAfterInsurance: breakdown.eligibleLoanAfterInsurance || "",
           postLoanServiceCharge: breakdown.postLoanServiceCharge || "",
           preLoanServiceCharge: breakdown.preLoanServiceCharge || "",
           totalRepayment: breakdown.totalRepayment || "",
@@ -455,6 +462,11 @@ export default function ContributionScheme() {
     const cost = Number(assetCost?.replace(/,/g, ""));
     const [day, month, year] = params.dob.split("/");
     const isoDob = `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    
+    const weekDayValue =
+      remittanceType === "Daily" ? "" : String(remittanceWeekDay || "");
+    const monthDayValue =
+      remittanceType === "Daily" ? "" : String(remittanceDayValue || "");
 
     const payload = {
       FullName: String(params.fullName || ""),
@@ -469,9 +481,10 @@ export default function ContributionScheme() {
       ContributionAmount: String(
         debouncedAdditionalContribution || contribution || ""
       ),
-      WeekDay: String(remittanceWeekDay || ""),
-      MonthDay: String(remittanceDayValue) || null,
+      WeekDay: weekDayValue,
+      MonthDay: monthDayValue,
       GovernmentIssuedIDUrl: params.documentUrl,
+      ReferrerCode: referralCode.trim() || "",
       UtilityBillUrl: params.utilityBillUrl,
       SelfieUrl: params.selfieUrl,
     };
@@ -490,6 +503,7 @@ export default function ContributionScheme() {
     contribution,
     isValidContribution,
     params,
+    referralCode,
     selectedSchemeId,
     remittanceDayValue,
     submitUserDetailsMutation,
@@ -564,6 +578,8 @@ export default function ContributionScheme() {
                   remittanceWeekDay={remittanceWeekDay}
                   setRemittanceWeekDay={setRemittanceWeekDay}
                   remittanceMonthDay={remittanceMonthDay}
+                  referralCode={referralCode}
+                  setReferralCode={setReferralCode}
                   handleRemittanceDaySelect={handleRemittanceDaySelect}
                   additionalWeeklyContribution={additionalWeeklyContribution}
                   setAdditionalWeeklyContribution={
@@ -595,6 +611,8 @@ export default function ContributionScheme() {
                   remittanceType={remittanceType}
                   setRemittanceType={setRemittanceType}
                   remittanceWeekDay={remittanceWeekDay}
+                  referralCode={referralCode}
+                  setReferralCode={setReferralCode}
                   setRemittanceWeekDay={setRemittanceWeekDay}
                   remittanceMonthDay={remittanceMonthDay}
                   handleRemittanceDaySelect={handleRemittanceDaySelect}
@@ -674,15 +692,12 @@ export default function ContributionScheme() {
                     </View>
 
                     <View style={styles.groupText}>
-                      <View>
-                        <Text style={styles.summaryText}>
-                          Repayment Duration
-                        </Text>
-                      </View>
-                      <Text style={styles.boldText}>{`${scheme.includes("Weekly")
-                        ? "52 weeks/1 yr"
-                        : "12 months/1yr"
-                        }`}</Text>
+                      <Text style={styles.summaryText}>
+                        Insurance Fee
+                      </Text>
+                      <Text style={styles.boldText}>
+                        {regularBreakdown.insurance}
+                      </Text>
                     </View>
 
                     <View style={styles.groupText}>
@@ -697,8 +712,20 @@ export default function ContributionScheme() {
                         </Text>
                       </View>
                       <Text style={styles.boldText}>
-                        {regularBreakdown.eligibleLoan}
+                        {regularBreakdown.eligibleLoanAfterInsurance}
                       </Text>
+                    </View>
+
+                    <View style={styles.groupText}>
+                      <View>
+                        <Text style={styles.summaryText}>
+                          Repayment Duration
+                        </Text>
+                      </View>
+                      <Text style={styles.boldText}>{`${scheme.includes("Weekly")
+                        ? "52 weeks/1 yr"
+                        : "12 months/1yr"
+                        }`}</Text>
                     </View>
 
                     <View style={styles.groupText}>
@@ -752,6 +779,12 @@ export default function ContributionScheme() {
                       options={MONTH_DAY_LABELS}
                     />
                   ) : null}
+                  <Input
+                    label="Referral Code (Optional)"
+                    value={referralCode}
+                    placeholder="Enter Your Referral Code"
+                    onChangeText={setReferralCode}
+                  />
                 </View>
               )}
             </View>
@@ -793,6 +826,8 @@ const TricylceBreakdownDetails = React.memo(
     remittanceWeekDay,
     setRemittanceWeekDay,
     remittanceMonthDay,
+    referralCode,
+    setReferralCode,
     handleRemittanceDaySelect,
     additionalWeeklyContribution,
     setAdditionalWeeklyContribution,
@@ -939,6 +974,12 @@ const TricylceBreakdownDetails = React.memo(
         infoTitle="Post-Loan Weekly Repayment over 4 years"
         infoContent="Total Fees = Eligible Loan + Loan Management Fee. Post-Loan Charge (0.05%) = 0.05% of Total Fees. Total to Repay Over 4 Years: = Total Fees + Post-Loan Charges. Weekly Repayment = Total Repayment ÷ 208 weeks"
       />
+      <Input
+        label="Referral Code (Optional)"
+        value={referralCode}
+        placeholder="Enter Your Referral Code"
+        onChangeText={setReferralCode}
+      />
     </View>
   )
 );
@@ -949,6 +990,8 @@ const VehicleBreakdownDetails = React.memo(
     remittanceType,
     preLoanCharge,
     setRemittanceType,
+    referralCode,
+    setReferralCode,
     remittanceWeekDay,
     setRemittanceWeekDay,
     remittanceMonthDay,
@@ -1045,7 +1088,6 @@ const VehicleBreakdownDetails = React.memo(
         infoTitle="Loan Management Fee over 4 years"
         infoContent="A monthly server charge as you save up your 10% equity."
       />
-
       <Input
         label={`Minimum ${remittanceType === "Weekly" ? "Weekly" : "Monthly"
           } Contribution`}
@@ -1098,6 +1140,12 @@ const VehicleBreakdownDetails = React.memo(
         showInfoIcon={true}
         infoTitle="Post-Loan Weekly Repayment over 4 years"
         infoContent="Total Fees = Eligible Loan + Loan Management Fee. Post-Loan Charge (0.05%) = 0.05% of Total Fees. Total to Repay Over 4 Years: = Total Fees + Post-Loan Charges. Weekly Repayment = Total Repayment ÷ 208 weeks"
+      />
+      <Input
+        label="Referral Code (Optional)"
+        value={referralCode}
+        placeholder="Enter Your Referral Code"
+        onChangeText={setReferralCode}
       />
     </View>
   )

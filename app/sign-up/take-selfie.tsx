@@ -1,4 +1,4 @@
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 
@@ -11,6 +11,8 @@ import Button from "../../components/ui/Buttton";
 export default function TakeASelfie() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation();
+
   const {
     fullName,
     phone,
@@ -84,6 +86,12 @@ export default function TakeASelfie() {
       <View style={{ marginBottom: resHeight(7) }} />
       <Button title="Take Selfie" onPress={handleTakeSelfie} />
       <View style={{ marginBottom: resHeight(3) }} />
+      {/* <View style={styles.groupText}>
+        <Text style={styles.footerText}>Wrong BVN? </Text>
+        <TouchableOpacity  onPress={() => router.push("/sign-up/confirm-bvn")}>
+          <Text style={styles.footerLink}>Click to Edit</Text>
+        </TouchableOpacity>
+      </View> */}
     </View>
   );
 }
@@ -127,4 +135,20 @@ const styles = StyleSheet.create({
     fontFamily: "OutfitRegular",
   },
   image: { height: 80, resizeMode: "contain" },
+  footerText: {
+    textAlign: "center",
+    fontSize: resFont(12),
+    color: Colors.dark.background,
+    fontFamily: "OutfitMedium",
+  },
+  footerLink: {
+    color: Colors.dark.primary,
+    fontWeight: "500",
+    fontFamily: "OutfitMedium",
+  },
+  groupText: {
+    flexDirection: "row",
+    marginTop: resHeight(4),
+    justifyContent: "center",
+  },
 });

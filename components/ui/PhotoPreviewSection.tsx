@@ -4,10 +4,14 @@ import { CameraCapturedPicture } from "expo-camera";
 import React from "react";
 import {
   Image,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
+import {
+  useNavigation,
+} from "expo-router";
 
 const PhotoPreviewSection = ({
   photo,
@@ -18,6 +22,7 @@ const PhotoPreviewSection = ({
   handleRetakePhoto: () => void;
   handleProceed: () => void;
 }) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.box}>
@@ -26,7 +31,11 @@ const PhotoPreviewSection = ({
           source={{ uri: "data:image/jpg;base64," + photo.base64 }}
         />
       </View>
-
+      <View style={styles.backButton}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <AntDesign name="arrow-left" size={28} color="white" />
+        </TouchableOpacity>
+      </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handleRetakePhoto}>
           <MaterialCommunityIcons name="camera-retake" size={36} color="white" />
@@ -72,6 +81,14 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: "center",
     justifyContent: "center",
+  },
+  backButton: {
+    position: "absolute",
+    top: Platform.OS === "ios" ? 50 : 30,
+    left: 20,
+    padding: 8,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    borderRadius: 20,
   },
 });
 

@@ -22,8 +22,6 @@ import Toast from "react-native-toast-message";
 
 const options = [
   { label: "Card", icon: "credit-card-outline" },
-  { label: "Bank Transfer", icon: "bank-transfer" },
-  { label: "Mobile Money", icon: "cellphone" },
 ] as const;
 
 export default function PaymentMethodScreen() {
@@ -37,13 +35,7 @@ export default function PaymentMethodScreen() {
       isCardLinked: boolean;
     };
   };
-  // useEffect(() => {
-  //   if (!userData?.data?.isCardLinked) {
-  //     router.push("/payment-setup/withdraw-setup");
-  //     return;
-  //   }
-  // }, [userData])
-  
+   
   const initPaymentMutation = useMutation({
     mutationFn: () =>
       handleFetch({
