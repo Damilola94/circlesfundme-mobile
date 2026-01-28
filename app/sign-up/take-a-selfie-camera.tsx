@@ -71,7 +71,7 @@ export default function Camera() {
         endpoint: "accounts/verify-bvn-selfie",
         method: "POST",
         body: formData,
-        auth:true,
+        auth: true,
         multipart: true,
       }),
 
@@ -193,7 +193,7 @@ export default function Camera() {
             <Text style={styles.loadingText}>Verifying BVN and selfie...</Text>
           </View>
         )}
-
+       
         <PhotoPreviewSection
           photo={photo}
           handleRetakePhoto={handleRetakePhoto}

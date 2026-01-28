@@ -30,7 +30,7 @@ export default function CreateAccount() {
 
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
-  const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [debounceTimeout, setDebounceTimeout] = useState<number | null>(null);
 
   const validatePassword = (value: string) => {
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
@@ -142,9 +142,9 @@ export default function CreateAccount() {
           </Text>
 
           <Input
-            label="Email Address or Phone Number"
+            label="Email Address"
             value={email}
-            placeholder="Enter Your Email or Phone"
+            placeholder="Enter Your Email Address"
             onChangeText={setEmail}
           />
 

@@ -194,7 +194,7 @@ const DashboardScreen = () => {
     const amount = parseFloat(withdrawalAmount.replace(/[^0-9.]/g, ""));
     const balanceStr = contribution?.balance?.toString() || "0";
     const currentBalance = parseFloat(balanceStr.replace(/[^0-9.]/g, ""));
-  
+
     if (!amount || amount <= 0) {
       Toast.show({
         type: "error",
@@ -202,7 +202,7 @@ const DashboardScreen = () => {
       });
       return;
     }
-  
+
     if (currentBalance < amount) {
       Toast.show({
         type: "error",
@@ -211,7 +211,7 @@ const DashboardScreen = () => {
       });
       return;
     }
-  
+
     withdrawalMutation.mutate({
       amount,
       deductChargeFromBalance,
@@ -496,8 +496,8 @@ const DashboardScreen = () => {
                                 maxLoan?.scheme === "Daily Contribution"
                                   ? "365 Days"
                                   : maxLoan?.scheme === "Weekly Contribution"
-                                  ? "52 Weeks"
-                                  : "12 Months"
+                                    ? "52 Weeks"
+                                    : "12 Months"
                               }
                             />
                             <Detail
@@ -670,6 +670,10 @@ const DashboardScreen = () => {
     router.push("/payment-setup/payment-method");
   };
 
+  const onPressedBankPaymentSetup = () => {
+    router.push("/contribution-bank-payment/payment-method");
+  };
+
   return (
     <View style={[styles.container, { marginTop: insets.top || 40 }]}>
       {userData?.data && (
@@ -707,11 +711,18 @@ const DashboardScreen = () => {
           onPress={onPressedPaymentSetup}
         />
       ) : activeIndex !== 0 ? (
-        <ContributionsCard
-          amount={userData?.data?.contributionAmount}
-          installmentDesc={userData?.data?.installmentDesc}
-          preInstallmentDesc={userData?.data?.preInstallmentDesc}
-        />
+        <View>
+          <SetupNotice
+            title="You can clear your contributions balance"
+            buttonText="Clear All Now"
+            onPress={onPressedBankPaymentSetup}
+          />
+          <ContributionsCard
+            amount={userData?.data?.contributionAmount}
+            installmentDesc={userData?.data?.installmentDesc}
+            preInstallmentDesc={userData?.data?.preInstallmentDesc}
+          />
+        </View>
       ) : null}
       <RecentActivityList />
       {renderLoanModal()}

@@ -17,13 +17,22 @@ import { formatAmount, resFont, resHeight, resWidth } from "@/utils/utils";
 import { AntDesign } from "@expo/vector-icons";
 // import { AntDesign, Ionicons } from "@expo/vector-icons";
 import Loader from "@/components/ui/Loader";
+import SelectInput from "@/components/ui/SelectInput";
 import handleFetch from "@/services/api/handleFetch";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import Button from "../../components/ui/Buttton";
-import Input from "../../components/ui/Input";
 
+const WEEK_DAYS = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 interface LoanInfo {
   data: {
     eligibleLoan: number;
@@ -38,6 +47,7 @@ export default function LoanApplication() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { loanData } = useLocalSearchParams();
+  const [remittanceWeekDay, setRemittanceWeekDay] = useState("");
   const queryClient = useQueryClient();
   const userData = queryClient.getQueryData(["users-me"]) as {
     data?: {
@@ -63,8 +73,6 @@ export default function LoanApplication() {
   )?.bankName;
 
   const [loanInfo, setLoanInfo] = useState<LoanInfo | null>(null);
-
-  const [loanTitle, setLoanTitle] = useState("");
   const [loanStep, setLoanStep] = useState<"loanProceed" | null>(null);
 
   useEffect(() => {
@@ -93,10 +101,8 @@ export default function LoanApplication() {
   // });
 
   const handleSubmit = () => {
-    if (!loanTitle) {
-      alert(
-        "Please enter the title of the loan you are applying for."
-      );
+    if (!remittanceWeekDay) {
+      alert("Please select a remittance day for your loan repayment.");
       return;
     }
     setLoanStep("loanProceed");
@@ -109,6 +115,9 @@ export default function LoanApplication() {
         extra: "create",
         auth: true,
         method: "POST",
+        body: {
+          weekDay: String(remittanceWeekDay || ""),
+        },
       }),
     onSuccess: async (res: any) => {
       if (res?.statusCode !== "200" && res?.status !== 200) {
@@ -265,12 +274,13 @@ export default function LoanApplication() {
 
             <Text style={styles.headerTitle}>Loan Application</Text>
           </View>
-
-          <Input
-            label="Title"
-            value={loanTitle}
-            onChangeText={setLoanTitle}
-            placeholder="Enter the title of your loan"
+          <SelectInput
+            label="Remittance Day"
+            value={remittanceWeekDay}
+            style={{ marginBottom: resHeight(1) }}
+            onSelect={setRemittanceWeekDay}
+            placeholder="Choose a day to remit your loan repayment"
+            options={WEEK_DAYS}
           />
 
           {/* <Text style={styles.label}>Upload Bank Statement</Text>

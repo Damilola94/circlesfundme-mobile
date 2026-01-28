@@ -1,16 +1,22 @@
-// components/dashboard/LoanHistoryCard.tsx
+import React from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+} from "react-native";
+import { ProgressBar } from "react-native-paper";
+import { useRouter } from "expo-router";
+
 import { Colors } from "@/constants/Colors";
 import { resFont } from "@/utils/utils";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
-import { ProgressBar } from "react-native-paper";
 
 interface LoanHistoryCardProps {
   amount: number;
   amountRepaid?: number;
   dateRange?: string;
   dateApplied?: string;
-  status: string;
+  status: "Pending" | "Waitlist" | "Approved" | "Active" | "Completed";
   progress?: number;
   repaymentCount?: number;
   totalRepaymentCount?: number;
@@ -18,7 +24,7 @@ interface LoanHistoryCardProps {
 
 const LoanHistoryCard: React.FC<LoanHistoryCardProps> = ({
   amount,
-  amountRepaid,
+  amountRepaid = 0,
   dateRange,
   dateApplied,
   status,
@@ -26,26 +32,38 @@ const LoanHistoryCard: React.FC<LoanHistoryCardProps> = ({
   totalRepaymentCount = 0,
   progress = 0,
 }) => {
-  if (status === "Pending" || status === "Waitlist" || status === "Approved") {
+  const router = useRouter();
+
+  const isNonClickable =
+    status === "Pending" || status === "Waitlist" || status === "Approved";
+
+  const isClickable =
+    status === "Active" || status === "Completed";
+
+  const statusColor = {
+    Pending: "#FFA500",
+    Waitlist: "#999",
+    Approved: Colors.dark.primary,
+    Active: Colors.dark.primary,
+    Completed: "#2E7D32",
+  }[status];
+
+  if (isNonClickable) {
     return (
       <View style={styles.card}>
         <View style={styles.headerRow}>
           <View>
             <Text style={styles.label}>Loan Amount</Text>
-            <Text style={styles.amount}>₦{amount}</Text>
+            <Text style={styles.amount}>
+              ₦{amount?.toLocaleString()}
+            </Text>
           </View>
-          <Text style={styles.date}>{dateApplied}</Text>
+          <Text style={styles?.date}>{dateApplied || "—"}</Text>
         </View>
 
         <View style={styles.statusRow}>
           <Text style={styles.label}>Status</Text>
-          <Text
-            style={[
-              styles.status,
-              status === "Pending" && { color: "#FFA500" },
-              status === "Waitlist" && { color: "#888" },
-            ]}
-          >
+          <Text style={[styles.status, { color: statusColor }]}>
             {status}
           </Text>
         </View>
@@ -53,32 +71,52 @@ const LoanHistoryCard: React.FC<LoanHistoryCardProps> = ({
     );
   }
 
-  return (
-    <View style={styles.card}>
+  const LoanContent = (
+    <>
       <View style={styles.headerRow}>
         <View>
           <Text style={styles.label}>Amount Repaid</Text>
-          <Text style={styles.amount}>₦{amountRepaid}</Text>
+          <Text style={styles.amount}>
+            ₦{amountRepaid.toLocaleString()}
+          </Text>
         </View>
-        <Text style={styles.date}>{dateRange || "N/A"}</Text>
+        <Text style={styles.date}>{dateRange || "—"}</Text>
       </View>
 
       <View style={styles.progressRow}>
-        <Text style={styles.status}>{status}</Text>
+        <Text style={[styles.status, { color: statusColor }]}>
+          {status}
+        </Text>
+
         <Text style={styles.repaymentCount}>
           {repaymentCount}/{totalRepaymentCount}
         </Text>
+
         <Text style={styles.percent}>{progress}%</Text>
       </View>
 
       <ProgressBar
-        progress={progress / 100}
+        progress={Math.min(progress / 100, 1)}
         color={Colors.dark.primary}
         style={styles.progressBar}
       />
-    </View>
-
+    </>
   );
+
+  if (isClickable) {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.85}
+        onPress={() =>
+          router.push("/loan-bank-payment/payment-method")
+        }
+      >
+        <View style={styles.card}>{LoanContent}</View>
+      </TouchableOpacity>
+    );
+  }
+
+  return null;
 };
 
 const styles = StyleSheet.create({
@@ -91,6 +129,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 4,
     elevation: 1,
+    borderWidth: 1,
+    borderColor: "#F2F2F2",
   },
   headerRow: {
     flexDirection: "row",
@@ -111,36 +151,35 @@ const styles = StyleSheet.create({
     fontSize: resFont(11),
     color: "#888",
   },
-  progressRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 12,
-    marginBottom: 6,
-  },
   statusRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 12,
   },
+  progressRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 12,
+    marginBottom: 6,
+  },
   status: {
     fontSize: resFont(12),
     fontFamily: "OutfitMedium",
-    color: Colors.dark.primary,
   },
   percent: {
     fontSize: resFont(12),
+    fontFamily: "OutfitMedium",
+  },
+  repaymentCount: {
+    fontSize: resFont(12),
+    color: "#555",
     fontFamily: "OutfitMedium",
   },
   progressBar: {
     height: 6,
     borderRadius: 4,
     backgroundColor: "#eee",
-  },
-  repaymentCount: {
-    fontSize: resFont(12),
-    color: "#555",
-    marginHorizontal: 8,
-    fontFamily: "OutfitMedium",
   },
 });
 
