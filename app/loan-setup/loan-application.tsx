@@ -116,7 +116,7 @@ export default function LoanApplication() {
         auth: true,
         method: "POST",
         body: {
-          WeekDay: String(remittanceWeekDay || ""),
+          weekDay: String(remittanceWeekDay || ""),
         },
       }),
     onSuccess: async (res: any) => {
