@@ -7,29 +7,29 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04114875CCDD296A693FD51C /* libPods-CirclesFundMe.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAC01F39EC41994C9E11E1C6 /* libPods-CirclesFundMe.a */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		3C5D898DED2D8E2BB1E3BA06 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBA260F386379A4E2139E4A /* ExpoModulesProvider.swift */; };
 		3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */; };
-		8B9032BB6C9146F00249E353 /* libPods-CirclesFundMe.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 948567088F2E580033786216 /* libPods-CirclesFundMe.a */; };
+		6B4100F1E9072E4FBA412E79 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = FB8BC797FFD660846520CBB5 /* PrivacyInfo.xcprivacy */; };
+		921908189BE26EA886DED2C6 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCE8AF299F928640DBE049AD /* ExpoModulesProvider.swift */; };
 		BB2F792D24A3F905000567C9 /* Expo.plist in Resources */ = {isa = PBXBuildFile; fileRef = BB2F792C24A3F905000567C9 /* Expo.plist */; };
 		F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F11748412D0307B40044C1D9 /* AppDelegate.swift */; };
-		F3CFD516E1FFFC33E2907E7B /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 16DC08CE0392295878F5E60B /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		13B07F961A680F5B00A75B9A /* CirclesFundMe.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CirclesFundMe.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = CirclesFundMe/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = CirclesFundMe/Info.plist; sourceTree = "<group>"; };
-		16DC08CE0392295878F5E60B /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = CirclesFundMe/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		7BBA260F386379A4E2139E4A /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-CirclesFundMe/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
-		948567088F2E580033786216 /* libPods-CirclesFundMe.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CirclesFundMe.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1FC67CEB8ABFDAD0B624B936 /* Pods-CirclesFundMe.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CirclesFundMe.release.xcconfig"; path = "Target Support Files/Pods-CirclesFundMe/Pods-CirclesFundMe.release.xcconfig"; sourceTree = "<group>"; };
 		AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = SplashScreen.storyboard; path = CirclesFundMe/SplashScreen.storyboard; sourceTree = "<group>"; };
 		BB2F792C24A3F905000567C9 /* Expo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Expo.plist; sourceTree = "<group>"; };
-		BF8947AA1A788B28EC6D0217 /* Pods-CirclesFundMe.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CirclesFundMe.release.xcconfig"; path = "Target Support Files/Pods-CirclesFundMe/Pods-CirclesFundMe.release.xcconfig"; sourceTree = "<group>"; };
+		C9418AD0CEA8F5E43D857C85 /* Pods-CirclesFundMe.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CirclesFundMe.debug.xcconfig"; path = "Target Support Files/Pods-CirclesFundMe/Pods-CirclesFundMe.debug.xcconfig"; sourceTree = "<group>"; };
+		CCE8AF299F928640DBE049AD /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-CirclesFundMe/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
+		DAC01F39EC41994C9E11E1C6 /* libPods-CirclesFundMe.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-CirclesFundMe.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F11748412D0307B40044C1D9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = CirclesFundMe/AppDelegate.swift; sourceTree = "<group>"; };
 		F11748442D0722820044C1D9 /* CirclesFundMe-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CirclesFundMe-Bridging-Header.h"; path = "CirclesFundMe/CirclesFundMe-Bridging-Header.h"; sourceTree = "<group>"; };
-		F274C44BC4830768013488E9 /* Pods-CirclesFundMe.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CirclesFundMe.debug.xcconfig"; path = "Target Support Files/Pods-CirclesFundMe/Pods-CirclesFundMe.debug.xcconfig"; sourceTree = "<group>"; };
+		FB8BC797FFD660846520CBB5 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; name = PrivacyInfo.xcprivacy; path = CirclesFundMe/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,21 +37,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8B9032BB6C9146F00249E353 /* libPods-CirclesFundMe.a in Frameworks */,
+				04114875CCDD296A693FD51C /* libPods-CirclesFundMe.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0CE129EBB47241F6AF1713CB /* Pods */ = {
+		01A88882FA8FFDB63C93531D /* ExpoModulesProviders */ = {
 			isa = PBXGroup;
 			children = (
-				F274C44BC4830768013488E9 /* Pods-CirclesFundMe.debug.xcconfig */,
-				BF8947AA1A788B28EC6D0217 /* Pods-CirclesFundMe.release.xcconfig */,
+				90081BB950303DC97182FA9F /* CirclesFundMe */,
 			);
-			name = Pods;
-			path = Pods;
+			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		13B07FAE1A68108700A75B9A /* CirclesFundMe */ = {
@@ -63,7 +61,7 @@
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				AA286B85B6C04FC6940260E9 /* SplashScreen.storyboard */,
-				16DC08CE0392295878F5E60B /* PrivacyInfo.xcprivacy */,
+				FB8BC797FFD660846520CBB5 /* PrivacyInfo.xcprivacy */,
 			);
 			name = CirclesFundMe;
 			sourceTree = "<group>";
@@ -72,17 +70,9 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				948567088F2E580033786216 /* libPods-CirclesFundMe.a */,
+				DAC01F39EC41994C9E11E1C6 /* libPods-CirclesFundMe.a */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		663D52B8092B04CEEC4935A0 /* ExpoModulesProviders */ = {
-			isa = PBXGroup;
-			children = (
-				A6A2F12F4495618F696BA1BD /* CirclesFundMe */,
-			);
-			name = ExpoModulesProviders;
 			sourceTree = "<group>";
 		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
@@ -99,8 +89,8 @@
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				0CE129EBB47241F6AF1713CB /* Pods */,
-				663D52B8092B04CEEC4935A0 /* ExpoModulesProviders */,
+				F2E3D1CFD3BA9D5CB513A5A8 /* Pods */,
+				01A88882FA8FFDB63C93531D /* ExpoModulesProviders */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -115,10 +105,10 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		A6A2F12F4495618F696BA1BD /* CirclesFundMe */ = {
+		90081BB950303DC97182FA9F /* CirclesFundMe */ = {
 			isa = PBXGroup;
 			children = (
-				7BBA260F386379A4E2139E4A /* ExpoModulesProvider.swift */,
+				CCE8AF299F928640DBE049AD /* ExpoModulesProvider.swift */,
 			);
 			name = CirclesFundMe;
 			sourceTree = "<group>";
@@ -132,6 +122,16 @@
 			path = CirclesFundMe/Supporting;
 			sourceTree = "<group>";
 		};
+		F2E3D1CFD3BA9D5CB513A5A8 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C9418AD0CEA8F5E43D857C85 /* Pods-CirclesFundMe.debug.xcconfig */,
+				1FC67CEB8ABFDAD0B624B936 /* Pods-CirclesFundMe.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -140,13 +140,13 @@
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "CirclesFundMe" */;
 			buildPhases = (
 				08A4A3CD28434E44B6B9DE2E /* [CP] Check Pods Manifest.lock */,
-				BD1199E27C46D582A3D8E0FF /* [Expo] Configure project */,
+				72C6BAC0AEFF0146854F05F8 /* [Expo] Configure project */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
 				800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */,
-				EEED7F6FAF73B8D6E7C17939 /* [CP] Embed Pods Frameworks */,
+				38F66C2AEBE5F40529C877A8 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -196,7 +196,7 @@
 				BB2F792D24A3F905000567C9 /* Expo.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				3E461D99554A48A4959DE609 /* SplashScreen.storyboard in Resources */,
-				F3CFD516E1FFFC33E2907E7B /* PrivacyInfo.xcprivacy in Resources */,
+				6B4100F1E9072E4FBA412E79 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -241,6 +241,52 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		38F66C2AEBE5F40529C877A8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-CirclesFundMe/Pods-CirclesFundMe-frameworks.sh",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/React-Core-prebuilt/React.framework/React",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ReactNativeDependencies/ReactNativeDependencies.framework/ReactNativeDependencies",
+				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/React.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactNativeDependencies.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CirclesFundMe/Pods-CirclesFundMe-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		72C6BAC0AEFF0146854F05F8 /* [Expo] Configure project */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/.xcode.env",
+				"$(SRCROOT)/.xcode.env.local",
+				"$(SRCROOT)/CirclesFundMe/CirclesFundMe.entitlements",
+				"$(SRCROOT)/Pods/Target Support Files/Pods-CirclesFundMe/expo-configure-project.sh",
+			);
+			name = "[Expo] Configure project";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/Pods/Target Support Files/Pods-CirclesFundMe/ExpoModulesProvider.swift",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-CirclesFundMe/expo-configure-project.sh\"\n";
 		};
 		800E24972A6A228C8D4807E9 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -318,52 +364,6 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CirclesFundMe/Pods-CirclesFundMe-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		BD1199E27C46D582A3D8E0FF /* [Expo] Configure project */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/.xcode.env",
-				"$(SRCROOT)/.xcode.env.local",
-				"$(SRCROOT)/CirclesFundMe/CirclesFundMe.entitlements",
-				"$(SRCROOT)/Pods/Target Support Files/Pods-CirclesFundMe/expo-configure-project.sh",
-			);
-			name = "[Expo] Configure project";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(SRCROOT)/Pods/Target Support Files/Pods-CirclesFundMe/ExpoModulesProvider.swift",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This script configures Expo modules and generates the modules provider file.\nbash -l -c \"./Pods/Target\\ Support\\ Files/Pods-CirclesFundMe/expo-configure-project.sh\"\n";
-		};
-		EEED7F6FAF73B8D6E7C17939 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-CirclesFundMe/Pods-CirclesFundMe-frameworks.sh",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/React-Core-prebuilt/React.framework/React",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/ReactNativeDependencies/ReactNativeDependencies.framework/ReactNativeDependencies",
-				"${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/Pre-built/hermes.framework/hermes",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/React.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactNativeDependencies.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/hermes.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-CirclesFundMe/Pods-CirclesFundMe-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -372,7 +372,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F11748422D0307B40044C1D9 /* AppDelegate.swift in Sources */,
-				3C5D898DED2D8E2BB1E3BA06 /* ExpoModulesProvider.swift in Sources */,
+				921908189BE26EA886DED2C6 /* ExpoModulesProvider.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,7 +381,7 @@
 /* Begin XCBuildConfiguration section */
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F274C44BC4830768013488E9 /* Pods-CirclesFundMe.debug.xcconfig */;
+			baseConfigurationReference = C9418AD0CEA8F5E43D857C85 /* Pods-CirclesFundMe.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -417,7 +417,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BF8947AA1A788B28EC6D0217 /* Pods-CirclesFundMe.release.xcconfig */;
+			baseConfigurationReference = 1FC67CEB8ABFDAD0B624B936 /* Pods-CirclesFundMe.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

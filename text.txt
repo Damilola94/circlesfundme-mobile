@@ -1,1 +1,4 @@
  eas update --channel preview --message "Feat:API Integration"
+ npx eas build -p android --profile production --clear-cache
+ npx eas build -p ios --profile production --clear-cache
+ eas submit -p ios
