@@ -136,14 +136,13 @@ export default function WithdrawScreen() {
         <View style={[styles.container, { marginTop: insets.top || 40 }]}>
           <View style={styles.headerRow}>
             <TouchableOpacity
-              onPress={() => router.back()}
+              onPress={() => router.push("/(tabs)/dashboard")}
               style={styles.backButton}
             >
               <AntDesign name="arrow-left" size={24} color="black" />
             </TouchableOpacity>
             <Text style={styles.headerTitle}>Withdrawal Account</Text>
           </View>
-
           <ProgressStepsBar currentStep={2} totalSteps={2} />
           <Text style={styles.title}>Withdrawal</Text>
 

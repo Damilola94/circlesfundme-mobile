@@ -713,7 +713,7 @@ const DashboardScreen = () => {
       ) : activeIndex !== 0 ? (
         <View>
           <SetupNotice
-            title="You can clear your contributions balance"
+            title="Clear your contributions balance"
             buttonText="Clear All Now"
             onPress={onPressedBankPaymentSetup}
           />

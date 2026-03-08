@@ -79,7 +79,7 @@ export default function ProfileScreen() {
     mutationFn: () =>
       handleFetch({
         endpoint: "users/deactivate-account",
-        method: "POST",
+        method: "POST" ,
         auth: true,
       }),
 

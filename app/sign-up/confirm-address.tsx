@@ -75,8 +75,6 @@ export default function ConfirmAddress() {
         type: utilityBill.mimeType || "",
       });
 
-      console.log(uploadedUrl, "uploadedUrl - utility");
-
       router.replace({
         pathname: "/sign-up/confirm-bvn",
         params: {

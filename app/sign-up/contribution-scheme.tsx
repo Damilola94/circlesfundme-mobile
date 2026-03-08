@@ -152,6 +152,22 @@ export default function ContributionScheme() {
     )?.id;
   }, [schemesData, scheme]);
 
+  const adjustedBaseContribution = useMemo(() => {
+    const base = toNumber(vehicleBreakdown.baseContributionAmount);
+
+    if (!isAssetFinance && !isTricycleFinance) return base;
+
+    if (remittanceType === "Weekly") return base / 4;
+    if (remittanceType === "Daily") return base / 28;
+
+    return base;
+  }, [
+    vehicleBreakdown.baseContributionAmount,
+    remittanceType,
+    isAssetFinance,
+    isTricycleFinance,
+  ]);
+
   // const extraContribution = toNumber(additionalWeeklyContribution);
   // const totalWeeklyContribution =
   //   extraContribution + toNumber(vehicleBreakdown.preLoanServiceCharge);
@@ -327,13 +343,10 @@ export default function ContributionScheme() {
       setIsAdditionalContributionInvalid(false);
       return;
     }
-    const base = toNumber(vehicleBreakdown.baseContributionAmount || 0);
+    const base = adjustedBaseContribution;
     const userAmount = toNumber(debouncedAdditionalContribution);
     setIsAdditionalContributionInvalid(userAmount < base);
-  }, [
-    debouncedAdditionalContribution,
-    vehicleBreakdown.baseContributionAmount,
-  ]);
+  }, [debouncedAdditionalContribution, adjustedBaseContribution]);
 
   useEffect(() => {
     if (
@@ -371,6 +384,12 @@ export default function ContributionScheme() {
     }
 
     if (isAssetFinance) {
+      if (isAdditionalContributionInvalid) {
+        setError(
+          `Amount must be ${formatAmount(adjustedBaseContribution)} or more.`
+        );
+        return;
+      }
       if (!assetCost) {
         setError("Please enter the cost of the vehicle.");
         return;
@@ -396,6 +415,12 @@ export default function ContributionScheme() {
         return;
       }
     } else if (isTricycleFinance) {
+      if (isAdditionalContributionInvalid) {
+        setError(
+          `Amount must be ${formatAmount(adjustedBaseContribution)} or more.`
+        );
+        return;
+      }
       if (!assetCost) {
         setError("Please enter the cost of the vehicle.");
         return;
@@ -573,6 +598,7 @@ export default function ContributionScheme() {
                 <VehicleBreakdownDetails
                   vehicleBreakdown={vehicleBreakdown}
                   preLoanCharge={preLoanCharge}
+                  adjustedBaseContribution={adjustedBaseContribution}
                   remittanceType={remittanceType}
                   setRemittanceType={setRemittanceType}
                   remittanceWeekDay={remittanceWeekDay}
@@ -608,6 +634,7 @@ export default function ContributionScheme() {
                 <TricylceBreakdownDetails
                   vehicleBreakdown={vehicleBreakdown}
                   preLoanCharge={preLoanCharge}
+                  adjustedBaseContribution={adjustedBaseContribution}
                   remittanceType={remittanceType}
                   setRemittanceType={setRemittanceType}
                   remittanceWeekDay={remittanceWeekDay}
@@ -800,19 +827,21 @@ export default function ContributionScheme() {
           )}
 
           {error ? <Text style={styles.error}>{error}</Text> : null}
-
-          <View style={{ marginBottom: resHeight(5) }} />
-          <Button
-            title={
-              submitUserDetailsMutation.isPending
-                ? "Accepting..."
-                : "Accept and Continue"
-            }
-            onPress={handleContinue}
-            disabled={submitUserDetailsMutation.isPending}
-          />
           <View style={{ marginBottom: resHeight(10) }} />
         </ScrollView>
+        <View
+        style={[styles.bottomButton, { paddingBottom: insets.bottom || 20 }]}
+      >
+        <Button
+          title={
+            submitUserDetailsMutation.isPending
+              ? "Accepting..."
+              : "Accept and Continue"
+          }
+          disabled={submitUserDetailsMutation.isPending}
+          onPress={handleContinue}
+        />
+      </View>
       </KeyboardAvoidingView>
     </View>
   );
@@ -822,6 +851,7 @@ const TricylceBreakdownDetails = React.memo(
   ({
     vehicleBreakdown,
     remittanceType,
+    adjustedBaseContribution,
     preLoanCharge,
     setRemittanceType,
     remittanceWeekDay,
@@ -842,7 +872,7 @@ const TricylceBreakdownDetails = React.memo(
           <Text style={styles.boldText}>₦{vehicleBreakdown.costOfVehicle}</Text>
         </View>
         <View style={styles.groupText}>
-          <Text style={styles.summaryText}>Insurance (6%) over 4 years</Text>
+          <Text style={styles.summaryText}>Insurance (5%) over 2 years</Text>
           <Text style={styles.boldText}>₦{vehicleBreakdown.insurance}</Text>
         </View>
         <View style={styles.groupText}>
@@ -876,7 +906,7 @@ const TricylceBreakdownDetails = React.memo(
         editable={false}
         showInfoIcon={true}
         infoTitle="Loan Management Fee over 4 years"
-        infoContent="Annually: 6% of Asset Value. Total for 4 Years: Annual Loan Management Fee × 4"
+        infoContent="Annually: 6% of Asset Value. Total for 2 Years: Annual Loan Management Fee × 4"
       />
       <SelectInput
         label="Remittance Type"
@@ -935,12 +965,12 @@ const TricylceBreakdownDetails = React.memo(
             ? "Weekly"
             : "Monthly"
         } } Contribution`}
-        infoContent={`Enter any amount from ₦${vehicleBreakdown.baseContributionAmount} and above to save toward your 10% equity down payment.`}
+        infoContent={`Enter any amount from ₦${adjustedBaseContribution} and above to save toward your 10% equity down payment.`}
         isInvalid={isAdditionalContributionInvalid}
         errorMessage={
           isAdditionalContributionInvalid
             ? `Amount must be ${formatAmount(
-                vehicleBreakdown.baseContributionAmount
+                adjustedBaseContribution
               )} or more.`
             : undefined
         }
@@ -1005,6 +1035,7 @@ const TricylceBreakdownDetails = React.memo(
 const VehicleBreakdownDetails = React.memo(
   ({
     vehicleBreakdown,
+    adjustedBaseContribution,
     remittanceType,
     preLoanCharge,
     setRemittanceType,
@@ -1034,7 +1065,7 @@ const VehicleBreakdownDetails = React.memo(
           <Text style={styles.boldText}>₦{vehicleBreakdown.extraTyre}</Text>
         </View>
         <View style={styles.groupText}>
-          <Text style={styles.summaryText}>Insurance (6%) over 4 years</Text>
+          <Text style={styles.summaryText}>Insurance (5%) over 4 years</Text>
           <Text style={styles.boldText}>₦{vehicleBreakdown.insurance}</Text>
         </View>
         <View style={styles.groupText}>
@@ -1127,12 +1158,12 @@ const VehicleBreakdownDetails = React.memo(
             ? "Weekly"
             : "Monthly"
         } Contribution`}
-        infoContent={`Enter any amount from ₦${vehicleBreakdown.baseContributionAmount} and above to save toward your 10% equity down payment.`}
+        infoContent={`Enter any amount from ₦${adjustedBaseContribution} and above to save toward your 10% equity down payment.`}
         isInvalid={isAdditionalContributionInvalid}
         errorMessage={
           isAdditionalContributionInvalid
             ? `Amount must be ${formatAmount(
-                vehicleBreakdown.baseContributionAmount
+                adjustedBaseContribution
               )} or more.`
             : undefined
         }
@@ -1251,5 +1282,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginVertical: 5,
+  },
+  bottomButton: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    backgroundColor: "#fff",
+    borderTopWidth: 1,
+    borderColor: "#eee",
   },
 });

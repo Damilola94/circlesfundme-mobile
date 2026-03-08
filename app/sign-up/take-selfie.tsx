@@ -42,7 +42,7 @@ export default function TakeASelfie() {
   }>();
 
   const handleTakeSelfie = () => {
-    router.push({
+    router.replace({
       pathname: "/sign-up/take-a-selfie-camera",
       params: {
         fullName,

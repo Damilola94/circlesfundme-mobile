@@ -8,7 +8,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Modal,
   ScrollView,
@@ -35,6 +35,7 @@ export default function PaymentMethodScreen() {
       isCardLinked: boolean;
     };
   };
+
    
   const initPaymentMutation = useMutation({
     mutationFn: () =>
@@ -70,6 +71,12 @@ export default function PaymentMethodScreen() {
     },
   });
 
+  useEffect(() => {
+    if (userData?.data?.isCardLinked) {
+      router.push("/payment-setup/withdraw-setup");
+    }
+  }, [userData?.data?.isCardLinked]);
+  
   const handleContinue = () => {
     if (selected !== "Card") {
       setShowModal(true);

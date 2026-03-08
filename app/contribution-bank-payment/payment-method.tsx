@@ -45,7 +45,7 @@ export default function BankPaymentSetup() {
         extra: "my-contributions",
         pQuery: {
           pageSize: 1000,
-          Status: "Unpaid"
+          Status: "Unpaid",
         },
         auth: true,
       }),
@@ -54,8 +54,7 @@ export default function BankPaymentSetup() {
   const contributions: Contribution[] = data?.data || [];
 
   const allSelected =
-    contributions.length > 0 &&
-    selectedIds.length === contributions.length;
+    contributions.length > 0 && selectedIds.length === contributions.length;
 
   const toggleSelectAll = () => {
     if (allSelected) {
@@ -128,14 +127,20 @@ export default function BankPaymentSetup() {
         ]}
       >
         <View style={styles.headerRow}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backButton}
+          >
             <AntDesign name="arrow-left" size={24} color="#000" />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Unpaid Contributions</Text>
         </View>
 
         {contributions.length > 0 && (
-          <TouchableOpacity style={styles.selectAllRow} onPress={toggleSelectAll}>
+          <TouchableOpacity
+            style={styles.selectAllRow}
+            onPress={toggleSelectAll}
+          >
             <Ionicons
               name={allSelected ? "checkbox" : "checkbox-outline"}
               size={22}
@@ -196,13 +201,18 @@ export default function BankPaymentSetup() {
         )}
 
         <View style={{ marginVertical: resHeight(2) }} />
+
+        <View style={{ marginVertical: resHeight(2) }} />
+      </ScrollView>
+      <View
+        style={[styles.bottomButton, { paddingBottom: insets.bottom || 20 }]}
+      >
         <Button
           title={`Pay Now  ₦${totalSelectedAmount?.toLocaleString()}`}
           disabled={selectedIds?.length === 0 || payMutation?.isPending}
           onPress={() => payMutation?.mutate()}
         />
-        <View style={{ marginVertical: resHeight(2) }} />
-      </ScrollView>
+      </View>
     </View>
   );
 }
@@ -307,5 +317,16 @@ const styles = StyleSheet.create({
     marginTop: 40,
     color: "#777",
     fontSize: resFont(14),
+  },
+  bottomButton: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    backgroundColor: "#fff",
+    borderTopWidth: 1,
+    borderColor: "#eee",
   },
 });
